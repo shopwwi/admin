@@ -1,0 +1,23 @@
+{
+    "cn":{
+      "{table}": {
+        "tips": {
+            "1":"{comment}操作提示"
+        },
+        "title": "{comment}",
+        "list": "{comment}列表",
+        "add": "新增{comment}",
+        "edit": "编辑{comment}",
+        "column": {
+            {column}
+        }
+      }
+    },
+    "en": {
+
+    },
+    "zhTW": {
+
+    }
+}
+

@@ -1,0 +1,37 @@
+<?php
+
+return [
+    'projectName' => '系统用户',
+    'list' => '用户列表',
+    'create' => '新增用户',
+    'update' => '编辑用户',
+    'delete' => '删除用户',
+    'show' => '用户详情',
+    'back' => '返回用户列表',
+    'confirm_delete' => '确定删除所选用户吗？',
+    'field' => [
+        'avatar'=>'头像',
+        'role_id' => '角色',
+        'created_user_id'=>'创建者',
+        'created_at'=>'创建时间',
+        'deleted_at'=>'删除标志',
+        'email'=>'用户邮箱',
+        'id'=>'用户ID',
+        'login_num'=>'登录次数',
+        'login_time'=>'登录时间',
+        'login_ip'=>'最后登录IP',
+        'last_login_time'=>'上次登录时间',
+        'last_login_ip'=>'上次登录IP',
+        'nickname'=>'昵称',
+        'password'=>'密码',
+        'mobile'=>'手机号码',
+        'sector_ids' => '部门',
+        'remark'=>'备注',
+        'sex'=>'性别',
+        'status'=>'帐号状态',
+        'updated_user_id'=>'更新者',
+        'updated_at'=>'更新时间',
+        'user_type'=>'用户类型（00系统用户）',
+        'username'=>'账号',
+    ]
+];

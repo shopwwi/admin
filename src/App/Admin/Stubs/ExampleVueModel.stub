@@ -1,0 +1,102 @@
+<template>
+  <CommonBasicModal @register="modalRegister" ref="modalRef" class="wd-800" :subBtnText="submitText"  @on-ok="handleSubmit">
+    <template #default>
+      <CommonBasicForm @register="register" @reset="handleReset" class="p-t-5 p-r-5" />
+    </template>
+  </CommonBasicModal>
+</template>
+
+<script lang="ts" setup>
+import {useModal} from "@shopwwi/admin/utils/Modal/hooks/useModal";
+import {FormSchema} from "@shopwwi/admin/utils/Form/types/form";
+import {useForm} from "@shopwwi/admin/utils/Form/hooks/useForm";
+import { apiAdmin{module}Create, apiAdmin{module}Store, apiAdmin{module}Edit, apiAdmin{module}Update } from "~/api/admin/{path}";
+
+const modalRef: any = ref(null)
+    , {t} = useI18n({useScope: 'local'})
+    , {$message} = useNuxtApp()
+    , submitText = ref(t('submitBtn'))
+    , form = <any>ref({})
+    , { dictKeys }:any = useAdminDict()
+    , modalType = ref('add')
+    , title = ref(t('add'));
+const emit = defineEmits(['wwi-ok', 'register']);
+// =====S 构建弹框 ====s=h=o=p=w=w=i=====//
+const [modalRegister, {openModal, closeModal, setSubLoading}] = useModal({
+  title: title,
+});
+// =====S 构建表单 ====s=h=o=p=w=w=i=====//
+const schemas = computed((): FormSchema[] => {
+  return [
+{column}
+  ];
+});
+const [register, {submit, getFieldsValue, setFieldsValue}] = useForm({
+  gridProps: {cols: 's:2 xs:1', collapsedRows: 3},
+  labelWidth: 145,
+  layout: 'horizontal',
+  showActionButtonGroup: false,
+  schemas,
+});
+// =====E 构建表单 ====s=h=o=p=w=w=i=====//
+
+// =====S 确认操作按钮 ====s=h=o=p=w=w=i=====//
+async function handleSubmit() {
+  const formRes = await submit();
+  if (formRes) {
+      try {
+        const { data }:any = modalType.value == 'edit' ? await apiAdmin{module}Update(form.value.id, getFieldsValue()) : await apiAdmin{module}Store(getFieldsValue());
+        $message.success(data.msg);
+        emit('wwi-ok');
+        closeModal();
+      } finally{
+         setSubLoading(false);
+      }
+  } else {
+    $message.error(t('submit_error'));
+    setSubLoading(false);
+  }
+}
+
+// ===== 重置操作按钮 ====s=h=o=p=w=w=i=====//
+function handleReset() {
+
+}
+// ===== 新增操作获取 ====s=h=o=p=w=w=i=====//
+async function getCreate() {
+  const {data}: any = await apiAdmin{module}Create({'_t':new Date().getTime()});
+  form.value = data;
+}
+// ===== 修改操作获取 ====s=h=o=p=w=w=i=====//
+async function getEdit(id) {
+  const {data}: any = await apiAdmin{module}Edit(id,{'_t':new Date().getTime()});
+  await setFieldsValue(data);
+}
+// =====S 创建入口 ====s=h=o=p=w=w=i=====//
+function add() {
+  title.value = t('{lang}.add');
+  form.value = {}
+  modalType.value = 'add';
+  nextTick(() => {
+//    getCreate();
+    openModal();
+  });
+}
+// =====S 修改入口 ====s=h=o=p=w=w=i=====//
+function edit(e) {
+  title.value = t('{lang}.edit');
+  form.value = e;
+  modalType.value = 'edit';
+  nextTick(() => {
+//    getEdit(e.id);
+    openModal();
+  });
+
+}
+
+defineExpose({
+  add, edit
+})
+</script>
+<i18n src="@shopwwi/admin/locales/base.json"></i18n>
+<i18n src="~/locales/admin/{lang}.json"></i18n>

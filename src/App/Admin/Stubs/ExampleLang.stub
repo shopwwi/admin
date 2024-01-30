@@ -1,0 +1,15 @@
+<?php
+
+return [
+    'projectName' => '{comment}',
+    'list' => '{comment}列表',
+    'create' => '新增{comment}',
+    'update' => '编辑{comment}',
+    'delete' => '删除{comment}',
+    'show' => '{comment}详情',
+    'back' => '返回{comment}列表',
+    'confirm_delete' => '确定删除所选{comment}吗？',
+    'field' => [
+{field}
+    ]
+];

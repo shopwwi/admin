@@ -1,0 +1,52 @@
+{
+  "name": "shopwwi/admin",
+  "description": "admin for the php",
+  "keywords": ["webman", "admin", "php"],
+  "type": "library",
+  "require": {
+    "php": ">=7.4 || >=8.0",
+    "symfony/translation": "^6.0",
+    "shopwwi/webman-filesystem": "^1.0",
+    "shopwwi/webman-auth": "^1.0",
+    "shopwwi/webman-socialite": "^1.0",
+    "shopwwi/webman-express": "^1.0",
+    "symfony/mailer": "^5.0",
+    "psr/container": "1.1.1",
+    "illuminate/database": "^9.0 || ^10.0",
+    "illuminate/pagination": "^9.0",
+    "illuminate/events": "^9.0",
+    "illuminate/http": "^9.0",
+    "illuminate/redis": "^9.0",
+    "illuminate/validation": "^9.0",
+    "overtrue/easy-sms": "^2.2",
+    "multiavatar/multiavatar-php": "^1.0",
+    "webman/redis-queue": "^1.2",
+    "yansongda/pay": "^3.2",
+    "shopwwi/laravel-cache": "^1.0",
+    "workerman/http-client": "^2.0",
+    "webman/blade": "^1.5",
+    "workerman/crontab": "^1.0",
+    "webman/gateway-worker": "*"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Shopwwi\\Admin\\": "src/"
+    },
+    "files": [
+      "helpers.php"
+    ]
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  },
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Tycoon Song",
+      "email": "8988354@qq.com"
+    }
+  ]
+}

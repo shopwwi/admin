@@ -1,0 +1,79 @@
+/**
+ * 查询{comment}
+ * @param params
+ */
+export const apiAdmin{model}List = async (params:any) => {
+    return await useApiAdmin('/admin/{url}', {params});
+}
+/**
+ * 查询{comment}详细
+ * @param Id
+ */
+export const apiAdmin{model}Info = async (Id:number) => {
+    return await useApiAdmin(`/admin/{url}/${Id}`);
+}
+/**
+ * 新增{comment}获取数据
+ * @param params
+ */
+export const apiAdmin{model}Create = async (params:any) => {
+    return await useApiAdmin('/admin/{url}/create', {params});
+}
+
+/**
+ * 保存{comment}
+ * @param data
+ */
+export const apiAdmin{model}Store = async (data:any) => {
+    return await useApiAdmin('/admin/{url}', {method:'POST',data});
+}
+
+/**
+ * 编辑{comment}获取数据
+ * @param Id
+ * @param params
+ */
+export const apiAdmin{model}Edit = async (Id:number,params={}) => {
+    return await useApiAdmin(`/admin/{url}/${Id}/edit`, {params});
+}
+
+/**
+ * 保存编辑{comment}
+ * @param Id
+ * @param data
+ */
+export const apiAdmin{model}Update = async (Id:number, data={}) => {
+    return await useApiAdmin(`/admin/{url}/${Id}`, {method:'PUT',data});
+}
+
+/**
+ * 删除{comment}
+ * @param Id
+ */
+export const apiAdmin{model}Destroy = async (Id:number) => {
+    return await useApiAdmin(`/admin/{url}/${Id}`, {method:'DELETE'});
+}
+
+/**
+ * 查询回收站{comment}
+ * @param params
+ */
+export const apiAdmin{model}RecoveryList = async (params:any) => {
+    return await useApiAdmin('/admin/{url}/recovery', {params});
+}
+
+/**
+ * 恢复{comment}
+ * @param Id
+ */
+export const apiAdmin{model}RecoveryBack = async (Id:number) => {
+    return await useApiAdmin(`/admin/{url}/recovery/${Id}`, {method:'PUT'});
+}
+
+/**
+ * 彻底删除{comment}
+ * @param Id
+ */
+export const apiAdmin{model}RecoveryDestroy = async (Id:number) => {
+    return await useApiAdmin(`/admin/{url}/recovery/${Id}`, {method:'DELETE'});
+}

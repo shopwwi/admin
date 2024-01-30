@@ -1,0 +1,153 @@
+<template>
+  <AdminLayout name="admin" active="{model}">
+    <!--====== S 头部 ===s=h=o=p=w=w=i== -->
+    <template #header>
+        <AdminHeader :title="t('{lang}.title')" :subtitle="t('{lang}.subtitle')">
+          <template #alert>
+            {{ t('{lang}.tips.1')}}
+          </template>
+          <template #search>
+            <CommonBasicForm @register="register" @submit="handleSearch" @reset="handleSearch" />
+          </template>
+        </AdminHeader>
+    </template>
+    <!--====== E 头部 ===s=h=o=p=w=w=i== -->
+
+    <!--====== S 数据表 ===s=h=o=p=w=w=i== -->
+    <CommonBasicTable ref="TableRef" :resizeHeightOffset="0" :title="t('{lang}.list')" class="mt-4"
+                      :row-key="(row)=>row.id"
+                      :columns="columns"
+                      :request="getList"
+                      :scroll-x="1280" showSelection
+                      :actionColumn="actionColumn"
+                      @update:sorter="handleSorterChange"
+                      @update:checked-row-keys="(num)=>{ checkedRowKeys = num}"
+    >
+      <template #toolbar>
+      <n-space>
+         <n-button type="primary" @click="adminModules{model}Ref.add()" size="small">{{ t('{lang}.add') }}</n-button>
+         <n-button type="error" @click="handleDelete" :disabled="checkedRowKeys.length < 1" size="small">{{ t('batch_deletion') }}({{ checkedRowKeys.length || 0 }})</n-button>
+         <NuxtLink :to="adminUrl('/{path}/recovery')" class="no-underline">
+            <n-button strong secondary type="warning" size="small">{{ t('recovery') }}</n-button>
+         </NuxtLink>
+      </n-space>
+      </template>
+    </CommonBasicTable>
+
+    <!--====== S 弹框模型 ===s=h=o=p=w=w=i== -->
+    <AdminModules{model} ref="adminModules{model}Ref" @wwi-ok="reloadTable" />
+  </AdminLayout>
+</template>
+
+<script lang="ts" setup>
+
+import { apiAdmin{model}List, apiAdmin{model}Destroy } from "~/api/admin/{path}";
+import {useForm} from "@shopwwi/admin/utils/Form/hooks/useForm";
+import TableAction from "@shopwwi/admin/components/common/basic/TableAction.vue";
+
+// =========S 页面初始 ===s=h=o=p=w=w=i== //
+const {t} = useI18n({useScope: 'local'}),seoTitle = ref(t('{lang}.title'));
+useHead({ title: seoTitle.value });
+definePageMeta({middleware:'admin'});
+// =========E 页面初始 ===s=h=o=p=w=w=i== //
+// =========S 数据定义 ===s=h=o=p=w=w=i== //
+const TableRef = ref()
+    , adminModules{model}Ref = ref()
+    , {adminUrl} = useAdmin()
+    , { $message,$dialog } = useNuxtApp()
+    , { dictKeys,dictKey }:any = useAdminDict()
+    , checkedRowKeys = ref([])
+    , searchParams = ref<any>({});
+// =========E 数据定义 ===s=h=o=p=w=w=i== //
+
+// =========S 检索字段 ===s=h=o=p=w=w=i== //
+const schemas = <any>[
+  {search}
+];
+const [register, {}] = useForm({
+  gridProps: {cols: '1 s:1 m:2 l:3 xl:4 xxl:4'},
+  labelWidth: 80,
+  schemas,
+});
+
+//========S 表 格 字 段  ===s=h=o=p=w=w=i== //
+const columns = [
+  {field}
+];
+
+//========S 操 作 按 钮  ===s=h=o=p=w=w=i== //
+const actionColumn = reactive({
+  width: 200,
+  title: t('operation'),
+  key: 'action',
+  fixed: 'right',
+  render(record:any) {
+    return h(TableAction as any, {
+      style: 'button',
+      actions: [
+        {
+          label: t('del'),
+          secondary:true,
+          icon: 'delete',
+          onClick: handleDelete.bind(null, record),
+        },
+        {
+          label: t('edit'),
+          icon: 'edit',
+          type: "primary",
+          onClick: adminModules{model}Ref.value.edit.bind(null, record),
+        },
+      ]
+    });
+  },
+});
+
+// =======S 检索数据,重置检索数据 ===s=h=o=p=w=w=i== //
+function handleSearch(values:any) {
+  searchParams.value = values;
+  reloadTable();
+}
+
+// =======S 排序 ===s=h=o=p=w=w=i== //
+function handleSorterChange(sorter:any) {
+  searchParams.value.orderBy = sorter.columnKey;
+  searchParams.value.orderDir = sorter.order ? (sorter.order === 'ascend' ? 'asc' : 'desc') : '';
+  reloadTable();
+}
+
+//=======S 请求列表数据 ===s=h=o=p=w=w=i== //
+async function getList(res:any) {
+  return await apiAdmin{model}List({...searchParams.value, ...res});
+}
+
+//======= 刷新表格数据 ===s=h=o=p=w=w=i== //
+function reloadTable() {
+  //加入时间 强制刷新表格
+  searchParams.value['_t'] = new Date().getTime();
+  TableRef.value.reload();
+}
+
+//========= 操作按钮删除 ===s=h=o=p=w=w=i== //
+function handleDelete(e:any) {
+  const selectId = e.id || checkedRowKeys.value;
+  const d = $dialog.warning({
+    title: t('operation_tips'),
+    content: t('delete_confirm', {id: selectId}),
+    positiveText: t('confirm')+ t('del'),
+    negativeText: t('cancel'),
+    negativeButtonProps:{secondary:true,ghost:false},
+    onPositiveClick: async () => {
+      d.loading = true
+      try {
+        const {data}: any = await apiAdmin{model}Destroy(selectId);
+        $message.success(data.msg);
+        reloadTable()
+      }finally {
+        d.loading = false
+      }
+    }
+  })
+}
+</script>
+<i18n src="@shopwwi/admin/locales/base.json"></i18n>
+<i18n src="~/locales/admin/{lang}.json"></i18n>
