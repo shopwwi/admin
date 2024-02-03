@@ -11,7 +11,6 @@
     "shopwwi/webman-socialite": "^1.0",
     "shopwwi/webman-express": "^1.0",
     "symfony/mailer": "^5.0",
-    "psr/container": "1.1.1",
     "illuminate/database": "^9.0 || ^10.0",
     "illuminate/pagination": "^9.0",
     "illuminate/events": "^9.0",
