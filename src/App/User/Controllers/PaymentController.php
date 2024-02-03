@@ -25,7 +25,7 @@ use support\Request;
 use support\Response;
 use Yansongda\Pay\Pay;
 
-class PayController extends Controllers
+class PaymentController extends Controllers
 {
     /**
      * 获取支付信息
