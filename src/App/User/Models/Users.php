@@ -19,7 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Shopwwi\Admin\App\User\Traits\UserTraits;
 use Shopwwi\Admin\Libraries\NumberCast;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 
 class Users extends Model
 {

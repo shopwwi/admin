@@ -87,7 +87,26 @@ class SysConfigController extends AdminController
                 if($this->format() == 'json'){
                     $info = SysConfigService::getFirstOrCreate([
                         'key' => 'socialite'
-                    ],['name'=>'登入接口信息','value'=>[]]);
+                    ],['name'=>'登入接口信息','value'=>[
+                        'qq' => ['client_id'=>'','client_secret'=>'','redirect'=>'{$userUrl}/auth/qq/callback'],
+                        'wechat' => ['client_id'=>'','client_secret'=>'','component'=>['id'=>'','token'=>''],'redirect'=>'{$userUrl}/auth/wechat/callback'],
+                        'weibo' => ['client_id'=>'','client_secret'=>'','redirect'=>'{$userUrl}/auth/weibo/callback'],
+                        'taobao' => ['client_id'=>'','client_secret'=>'','redirect'=>'{$userUrl}/auth/taobao/callback'],
+                        'alipay' => ['client_id'=>'','rsa_private_key'=>'','redirect'=>'{$userUrl}/auth/alipay/callback'],
+                        'coding' => ['client_id'=>'','client_secret'=>'','team_url'=>'https://{your-team}.coding.net', 'redirect'=>'{$userUrl}/auth/coding/callback'],
+                        'dingtalk' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/dingtalk/callback'],
+                        'baidu' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/baidu/callback'],
+                        'azure' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/azure/callback'],
+                        'douban' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/douban/callback'],
+                        'facebook' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/facebook/callback'],
+                        'feishu' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/feishu/callback'],
+                        'figma' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/figma/callback'],
+                        'gitee' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/gitee/callback'],
+                        'github' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/github/callback'],
+                        'toutiao' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/toutiao/callback'],
+                        'wework' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/wework/callback'],
+                        'xigua' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/xigua/callback'],
+                    ]]);
                     return shopwwiSuccess($info);
                 }
                 $form = $this->baseForm()->body([
@@ -128,6 +147,7 @@ class SysConfigController extends AdminController
                         'key' => 'siteInfo'
                     ],['name'=>'站点信息','value'=>[
                         'siteName' => 'ShopWWI智能管理系统',
+                        'siteUrl' => '',
                         'siteIcp' => '',
                         'siteBol' => '',
                         'sitePoliceNet' => '',
@@ -147,6 +167,7 @@ class SysConfigController extends AdminController
                 $form = $this->baseForm()->body([
                     shopwwiAmis('grid')->gap('lg')->columns([
                         shopwwiAmis('input-text')->name('siteInfo.siteName')->label(trans('siteInfo.siteName',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteName',[],$this->trans)],'messages'))->xs(12),
+                        shopwwiAmis('input-text')->name('siteInfo.siteUrl')->label('站点链接')->placeholder('请输入站点链接')->xs(12),
                         shopwwiAmis('input-image')->name('siteInfo.siteLogo')->label(trans('siteInfo.siteLogo',[],$this->trans))->xs(12)->md(6),
                         shopwwiAmis('input-image')->name('siteInfo.siteIcon')->label(trans('siteInfo.siteIcon',[],$this->trans))->xs(12)->md(6),
                         shopwwiAmis('input-text')->name('siteInfo.siteEmail')->label(trans('siteInfo.siteEmail',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteEmail',[],$this->trans)],'messages'))->xs(12),
@@ -159,7 +180,7 @@ class SysConfigController extends AdminController
                         shopwwiAmis('textarea')->name('siteInfo.siteDescription')->label(trans('siteInfo.siteDescription',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteDescription',[],$this->trans)],'messages'))->xs(12),
                         shopwwiAmis('textarea')->name('siteInfo.siteFlowCode')->label(trans('siteInfo.siteFlowCode',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteFlowCode',[],$this->trans)],'messages'))->xs(12),
                         shopwwiAmis('radios')->name('siteInfo.siteStatus')->label(trans('siteInfo.siteStatus',[],$this->trans))->selectFirst(true)->options($openOrClose)->xs(12),
-                        shopwwiAmis('textarea')->name('siteInfo.siteCloseRemark')->label(trans('siteInfo.siteCloseRemark',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteCloseRemark',[],$this->trans)],'messages'))->xs(12),
+                        shopwwiAmis('textarea')->name('siteInfo.siteCloseRemark')->label(trans('siteInfo.siteCloseRemark',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteCloseRemark',[],$this->trans)],'messages'))->xs(12)->visibleOn('this.siteInfo?.siteStatus != 1'),
                     ])
                 ])->api('post:' . shopwwiAdminUrl('system/config/site'))
                     ->actions([
@@ -191,29 +212,23 @@ class SysConfigController extends AdminController
         try {
             if($request->method() === 'GET'){
                 if($this->format() == 'json'){
-                    $info = SysConfigService::getFirstOrCreate([
-                        'key' => 'siteAuthRule'
-                    ],['name'=>'站点规则设置','value'=>[
-                          "authCodeVerifyTime" => 5,
-                          "authCodeResendTime" => 60,
-                          "authCodeSameIpResendTime" => 30,
-                          "authCodeSameIpEmailResendTime" => 5,
-                          "authCodeSamePhoneMaxNum" => 12,
-                          "authCodeSameEmailMaxNum" => 50,
-                          "authCodeSameEmailIpMaxNum" => 3,
-                          "authCodeSameIpMaxNum" => 3
-                    ]]);
-                    return shopwwiSuccess($info);
+//                    $info = SysConfigService::getFirstOrCreate([
+//                        'key' => 'siteAuthRule'
+//                    ],['name'=>'站点规则设置','value'=>[
+//                          "authCodeVerifyTime" => 5,
+//                          "authCodeResendTime" => 60,
+//                          "authCodeSameIpResendTime" => 30,
+//                          "authCodeSameIpEmailResendTime" => 5,
+//                          "authCodeSamePhoneMaxNum" => 12,
+//                          "authCodeSameEmailMaxNum" => 50,
+//                          "authCodeSameEmailIpMaxNum" => 3,
+//                          "authCodeSameIpMaxNum" => 3
+//                    ]]);
+                    return shopwwiSuccess([]);
                 }
                 $form = $this->baseForm()->body([
                     shopwwiAmis('grid')->gap('lg')->columns([
-                        shopwwiAmis('input-text')->name('siteAuthRule.authCodeVerifyTime')->label(trans('siteInfo.siteName',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteName',[],$this->trans)],'messages'))->xs(12),
-                        shopwwiAmis('input-text')->name('siteInfo.siteLogo')->label(trans('siteInfo.siteLogo',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteLogo',[],$this->trans)],'messages'))->xs(12),
-                        shopwwiAmis('input-text')->name('siteInfo.siteIcon')->label(trans('siteInfo.siteIcon',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteIcon',[],$this->trans)],'messages'))->xs(12),
-                        shopwwiAmis('input-text')->name('siteInfo.siteEmail')->label(trans('siteInfo.siteEmail',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteEmail',[],$this->trans)],'messages'))->xs(12),
-                        shopwwiAmis('input-text')->name('siteInfo.sitePhone')->label(trans('siteInfo.sitePhone',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.sitePhone',[],$this->trans)],'messages'))->xs(12),
-                        shopwwiAmis('input-text')->name('siteInfo.siteIcp')->label(trans('siteInfo.siteIcp',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteIcp',[],$this->trans)],'messages'))->xs(12),
-                        shopwwiAmis('input-text')->name('siteInfo.siteKeyword')->label(trans('siteInfo.siteKeyword',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteKeyword',[],$this->trans)],'messages'))->xs(12),
+//                        shopwwiAmis('input-text')->name('siteAuthRule.authCodeVerifyTime')->label(trans('siteInfo.siteName',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteName',[],$this->trans)],'messages'))->xs(12),
                     ])
                 ])->api('post:' . shopwwiAdminUrl('system/config/rule'))
                     ->actions([
@@ -243,15 +258,15 @@ class SysConfigController extends AdminController
                     $info = SysConfigService::getFirstOrCreate([
                         'key' => 'siteDefaultImage'
                     ],['name'=>'站点默认图片','value'=>[
-                        'goodsImage' => '',
-                        'userImage' => '',
+                        'noPic' => 'uploads/default-image.png',
+                        'userAvatar' => 'uploads/default-avatar.png',
                     ]]);
                     return shopwwiSuccess($info);
                 }
                 $form = $this->baseForm()->body([
                     shopwwiAmis('grid')->gap('lg')->columns([
-                        shopwwiAmis('input-image')->name('siteDefaultImage.goodsImage')->label(trans('siteDefaultImage.goodsImage',[],$this->trans))->xs(12),
-                        shopwwiAmis('input-image')->name('siteDefaultImage.userImage')->label(trans('siteDefaultImage.userImage',[],$this->trans))->xs(12),
+                        shopwwiAmis('input-image')->name('siteDefaultImage.noPic')->label(trans('siteDefaultImage.goodsImage',[],$this->trans))->xs(12),
+                        shopwwiAmis('input-image')->name('siteDefaultImage.userAvatar')->label(trans('siteDefaultImage.userImage',[],$this->trans))->xs(12),
                     ])
                 ])->api('post:' . shopwwiAdminUrl('system/config/pic'))
                     ->actions([

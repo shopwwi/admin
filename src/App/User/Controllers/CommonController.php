@@ -21,7 +21,7 @@ use Shopwwi\Admin\App\Admin\Models\SysArea;
 use Shopwwi\Admin\App\Admin\Service\DictTypeService;
 use Shopwwi\Admin\App\User\Models\UserFiles;
 use Shopwwi\WebmanAuth\Facade\Auth;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 use support\Request;
 use support\Response;
 

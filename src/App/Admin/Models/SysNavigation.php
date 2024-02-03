@@ -15,7 +15,7 @@
  *-------------------------------------------------------------------------i*
  */
 namespace Shopwwi\Admin\App\Admin\Models;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 
 class SysNavigation extends Model
 {

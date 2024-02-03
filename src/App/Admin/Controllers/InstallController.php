@@ -12,6 +12,11 @@ class InstallController
     public $noNeedLogin = ['index','check','store','text']; //不需要登入
      public $routeAction = ['check'=>['OPTIONS','POST']]; //方法注册 未填写的则直接any
 
+    /**
+     * 安装系统
+     * @param Request $request
+     * @return \support\Response
+     */
     public function index(Request $request){
         if($this->checkIsInstall()){ // 已经安装过了
             $page = shopwwiAmis('page')->bodyClassName('must p-0 bg-transparent')->body([
@@ -87,7 +92,7 @@ HTML
                                 shopwwiAmis('input-password')->name('password')->label('数据库密码')->required(true),
                             ],'mode'=>'horizontal','api'=>$request->url().'/check'],
                             ['title'=>'导入数据','body'=>[
-                                shopwwiAmis('alert')->body('系统将导入初始化数据，根据服务器的配置不同，所需时间也不同，请耐心等待！<br/>开启强覆盖，将重置所有数据表！<br/>如果你的数据库存在数据，请先完成备份在点下一步'),
+                                shopwwiAmis('alert')->body('系统将导入初始化数据，根据服务器的配置不同，所需时间也不同，请耐心等待！<br/>开启强覆盖，将重置所有数据表！<br/>如果你的数据库存在数据，请先完成备份在点下一步<br/>请确认你的服务器已经安装了redis并可正常使用'),
                                 shopwwiAmis('input-text')->name('admin_name')->label('管理员账号')->value('admin')->required(true),
                                 shopwwiAmis('input-password')->name('admin_password')->label('管理员密码')->required(true),
                                 shopwwiAmis('switch')->name('is_drop')->label('强覆盖')->trueValue(1)->falseValue(0)->value(0)->required(true),
@@ -95,6 +100,7 @@ HTML
                             ],'mode'=>'horizontal','api'=>$request->url()],
                             ['title'=>'安装完成', 'body'=>[
                                 shopwwiAmis('tpl')->className('text-xl flex items-center justify-center')->tpl('恭喜你！安装成功'),
+                                shopwwiAmis('tpl')->className('text-xl flex items-center justify-center opacity-50')->tpl('初始化数据在后端安装中,如需完整体验，请稍后访问'),
                                 shopwwiAmis('flex')->className('py-10')->items([
                                     shopwwiAmis('button')->label('访问管理中心')->actionType('url')->url(shopwwiAdminUrl(''))->level('primary')->className('mr-4'),
                                     shopwwiAmis('button')->label('访问会员中心')->actionType('url')->url(shopwwiUserUrl(''))->level('primary')
@@ -226,8 +232,9 @@ EOF;
                 'password' => $params->admin_password,
                 'role_id' => 1
             ]);
+
             // 写入初始数据
-            InstallService::Seeders();
+            \Webman\RedisQueue\Client::send('admin-install', '');
 
             //新增一个标识文件，用来屏蔽重新安装
             $fp = @fopen(public_path().'/lock','wb+');

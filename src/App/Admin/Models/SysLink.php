@@ -16,7 +16,7 @@
  */
 namespace Shopwwi\Admin\App\Admin\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 
 class SysLink extends Model
 {

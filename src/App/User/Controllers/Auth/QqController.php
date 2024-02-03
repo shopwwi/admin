@@ -27,25 +27,24 @@ class QqController extends Controllers
 
     /**
      * 从 QQ 获取用户信息
-     *
      */
     public function callback(Request $request)
     {
         $code = $request->input('code');
-        $qqUser = Socialite::driver('qq')->setGuzzleOptions(['verify'=>false])->userFromCode($code);
-        $openUser = UserOpens::where('open_type','QQ')->where('open_id', $qqUser->id)->first();
+        $backUser = Socialite::driver('qq')->setGuzzleOptions(['verify'=>false])->userFromCode($code);
+        $openUser = UserOpens::where('open_type','qq')->where('open_id', $backUser->id)->first();
         if($openUser != null){
-            $openUser->open_info = $qqUser->raw;
+            $openUser->open_info = $backUser->raw;
             $openUser->save();
             $user =Users::where('id',$openUser->user_id)->first();
         }else{
-            $user = AuthService::addUser(['nickname'=>$qqUser->nickname,'avatar'=>$qqUser->avatar]);
+            $user = AuthService::addUser(['nickname'=>$backUser->nickname,'avatar'=>$backUser->avatar]);
             UserOpens::create([
                 'user_id' => $user->id,
-                'open_type' => 'QQ',
-                'open_id' => $qqUser->id,
-                'open_info' => $qqUser->raw,
-                'open_unionid' => $qqUser->unionid,
+                'open_type' => 'qq',
+                'open_id' => $backUser->id,
+                'open_info' => $backUser->raw,
+                'open_unionid' => $backUser->unionid,
             ]);
         }
         Auth::guard($this->guard)->fail()->login($user);

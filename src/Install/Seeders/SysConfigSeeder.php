@@ -3,6 +3,7 @@
 namespace Shopwwi\Admin\Install\Seeders;
 
 use Shopwwi\Admin\App\Admin\Models\SysConfig;
+use support\Request;
 
 class SysConfigSeeder
 {
@@ -18,31 +19,22 @@ class SysConfigSeeder
     protected static function getData(){
         return [
             ['key'=>'siteInfo','name' => '站点信息','value' => [
-                'siteName' => '',
+                'siteName' => 'ShopWWI智能管理系统',
+                'siteUrl' => '',
                 'siteIcp' => '',
-                'siteLogo' => '/static/uploads/common/logo.svg',
+                'siteLogo' => 'uploads/common/logo.svg',
                 'siteIcon' => '',
                 'siteKeyword' => '',
                 'siteDescription' => '',
-                'siteStatus' => '0',
+                'siteStatus' => '1',
                 'siteCloseRemark' => '',
                 'siteEmail' => '',
                 'sitePhone' => '',
                 'siteFlowCode' => ''
             ],'is_system' => '1','is_open' => '1'],
-            ['key'=>'siteImages','name' => '默认图片配置','value' => [
-                'userAvatar' => '/static/uploads/common/user-avatar.png', // 用户默认头像
-                'noPic' => '', //默认图片
-            ],'is_system' => '1','is_open' => '1'],
-            ['key'=>'siteAuthRule','name' => '站点规则设置','value' => [
-                'authCodeVerifyTime' => 5, // 验证有效时间 分钟
-                'authCodeResendTime' => 60, // 同一类型同一手机号/邮箱[n]秒内只能发一条验证码
-                'authCodeSameIpResendTime' => 30, // 同一类型同一IP[n]秒内只能发一条验证码
-                'authCodeSameIpEmailResendTime' => 5,// 同一类型同一IP[n]秒内只能发一条邮件
-                'authCodeSamePhoneMaxNum' => 12, // 同一手机号24小时内，发送验证码次数不能超过
-                'authCodeSameEmailMaxNum' => 50, // 同一邮箱24小时内，发送验证码次数不能超过
-                'authCodeSameEmailIpMaxNum' => 3, // 同一IP 24小时内，邮箱发送动态码次数不能超过
-                'authCodeSameIpMaxNum' => 3, // 同一IP 24小时内，发送动态码次数不能超过
+            ['key'=>'siteDefaultImage','name' => '默认图片配置','value' => [
+                'userAvatar' => 'uploads/default-avatar.png', // 用户默认头像
+                'noPic' => 'uploads/default-image.png', //默认图片
             ],'is_system' => '1','is_open' => '1'],
             ['key'=>'sms','name' => '短信服务','value' => [
                 'used'=>'0',
@@ -100,7 +92,7 @@ class SysConfigSeeder
                 ],
             ],'is_system' => '1','is_open' => '0'],
             ['key'=>'map','name' => '地图服务设置','value' => [
-                'type' => 'gaode',
+                'type' => 'amap',
                 'baiduKey' => '',
                 'amapKey' => '',
                 'qqKey' => '',
@@ -115,6 +107,126 @@ class SysConfigSeeder
                 'rule' => [
                     'time' => '3', // 周期时长（天）
                     'num' => '3' //周期可提现次数
+                ]
+            ],'is_system' => '1','is_open' => '0'],
+            ['key'=>'socialite','name' => '登入信息配置','value' => [
+                'qq' => ['client_id'=>'','client_secret'=>'','redirect'=>'{$userUrl}/auth/qq/callback'],
+                'wechat' => ['client_id'=>'','client_secret'=>'','component'=>['id'=>'','token'=>''],'redirect'=>'{$userUrl}/auth/wechat/callback'],
+                'weibo' => ['client_id'=>'','client_secret'=>'','redirect'=>'{$userUrl}/auth/weibo/callback'],
+                'taobao' => ['client_id'=>'','client_secret'=>'','redirect'=>'{$userUrl}/auth/taobao/callback'],
+                'alipay' => ['client_id'=>'','rsa_private_key'=>'','redirect'=>'{$userUrl}/auth/alipay/callback'],
+                'coding' => ['client_id'=>'','client_secret'=>'','team_url'=>'https://{your-team}.coding.net', 'redirect'=>'{$userUrl}/auth/coding/callback'],
+                'dingtalk' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/dingtalk/callback'],
+                'baidu' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/baidu/callback'],
+                'azure' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/azure/callback'],
+                'douban' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/douban/callback'],
+                'facebook' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/facebook/callback'],
+                'feishu' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/feishu/callback'],
+                'figma' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/figma/callback'],
+                'gitee' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/gitee/callback'],
+                'github' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/github/callback'],
+                'toutiao' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/toutiao/callback'],
+                'wework' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/wework/callback'],
+                'xigua' => ['client_id'=>'','client_secret'=>'', 'redirect'=>'{$userUrl}/auth/xigua/callback'],
+            ],'is_system' => '1','is_open' => '0'],
+            ['key'=>'filesystem','name' => '附件存储设置','value' => [
+                'default' => 'public',
+                'ext_yes' => [],
+                'ext_no' => [],
+                'max_size' => 1024 * 1024 * 10, //单个文件大小10M
+                'storage' => [
+                    'public' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\LocalAdapterFactory::class,
+                        'root' => public_path().'/static',
+                        'url' => '//127.0.0.1:8787/static' // 静态文件访问域名
+                    ],
+                    'local' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\LocalAdapterFactory::class,
+                        'root' => runtime_path(),
+                        'url' => '//127.0.0.1:8787' // 静态文件访问域名
+                    ],
+                    'ftp' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\FtpAdapterFactory::class,
+                        'host' => 'ftp.example.com',
+                        'username' => 'username',
+                        'password' => 'password',
+                        'url' => '' // 静态文件访问域名
+                        // 'port' => 21,
+                        // 'root' => '/path/to/root',
+                        // 'passive' => true,
+                        // 'ssl' => true,
+                        // 'timeout' => 30,
+                        // 'ignorePassiveAddress' => false,
+                        // 'timestampsOnUnixListingsEnabled' => true,
+                    ],
+                    'memory' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\MemoryAdapterFactory::class,
+                    ],
+                    's3' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\S3AdapterFactory::class,
+                        'credentials' => [
+                            'key' => 'S3_KEY',
+                            'secret' => 'S3_SECRET',
+                        ],
+                        'region' => 'S3_REGION',
+                        'version' => 'latest',
+                        'bucket_endpoint' => false,
+                        'use_path_style_endpoint' => false,
+                        'endpoint' => 'S3_ENDPOINT',
+                        'bucket_name' => 'S3_BUCKET',
+                        'url' => '' // 静态文件访问域名
+                    ],
+                    'minio' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\S3AdapterFactory::class,
+                        'credentials' => [
+                            'key' => 'S3_KEY',
+                            'secret' => 'S3_SECRET',
+                        ],
+                        'region' => 'S3_REGION',
+                        'version' => 'latest',
+                        'bucket_endpoint' => false,
+                        'use_path_style_endpoint' => true,
+                        'endpoint' => 'S3_ENDPOINT',
+                        'bucket_name' => 'S3_BUCKET',
+                        'url' => '' // 静态文件访问域名
+                    ],
+                    'oss' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\AliyunOssAdapterFactory::class,
+                        'accessId' => 'OSS_ACCESS_ID',
+                        'accessSecret' => 'OSS_ACCESS_SECRET',
+                        'bucket' => 'OSS_BUCKET',
+                        'endpoint' => 'OSS_ENDPOINT',
+                        'url' => '' // 静态文件访问域名
+                        // 'timeout' => 3600,
+                        // 'connectTimeout' => 10,
+                        // 'isCName' => false,
+                        // 'token' => null,
+                        // 'proxy' => null,
+                    ],
+                    'qiniu' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\QiniuAdapterFactory::class,
+                        'accessKey' => 'QINIU_ACCESS_KEY',
+                        'secretKey' => 'QINIU_SECRET_KEY',
+                        'bucket' => 'QINIU_BUCKET',
+                        'domain' => 'QINBIU_DOMAIN',
+                        'url' => '' // 静态文件访问域名
+                    ],
+                    'cos' => [
+                        'driver' => \Shopwwi\WebmanFilesystem\Adapter\CosAdapterFactory::class,
+                        'region' => 'COS_REGION',
+                        'app_id' => 'COS_APPID',
+                        'secret_id' => 'COS_SECRET_ID',
+                        'secret_key' => 'COS_SECRET_KEY',
+                        // 可选，如果 bucket 为私有访问请打开此项
+                        // 'signed_url' => false,
+                        'bucket' => 'COS_BUCKET',
+                        'read_from_cdn' => false,
+                        'url' => '' // 静态文件访问域名
+                        // 'timeout' => 60,
+                        // 'connect_timeout' => 60,
+                        // 'cdn' => '',
+                        // 'scheme' => 'https',
+                    ],
                 ]
             ],'is_system' => '1','is_open' => '0'],
         ];

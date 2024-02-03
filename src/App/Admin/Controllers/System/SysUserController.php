@@ -21,7 +21,7 @@ use Shopwwi\Admin\App\Admin\Models\SysUserSector;
 use Shopwwi\Admin\App\Admin\Service\AmisService;
 use Shopwwi\Admin\App\Admin\Service\DictTypeService;
 use Shopwwi\Admin\Libraries\Amis\AdminController;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 use support\Request;
 use support\Response;
 

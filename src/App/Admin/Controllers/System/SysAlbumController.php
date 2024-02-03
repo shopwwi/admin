@@ -61,7 +61,7 @@ class SysAlbumController extends AdminController
                 if($this->format() == 'json'){
                     $info = SysConfigService::getFirstOrCreate([
                         'key' => 'filesystem'
-                    ],['name'=>'站点信息','value'=>[
+                    ],['name'=>'附件信息配置','value'=>[
                         'default' => 'public',
                         'ext_yes' => [],
                         'ext_no' => [],

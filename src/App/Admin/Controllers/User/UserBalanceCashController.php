@@ -153,6 +153,7 @@ class UserBalanceCashController extends AdminController
                 }
                 $openOrClose = DictTypeService::getAmisDictType('openOrClose');
                 $form = $this->baseForm()->body([
+                    shopwwiAmis('alert')->body('设置周期规则，则表示周期内X天最多可提现Y次'),
                     shopwwiAmis('grid')->gap('lg')->columns([
                         shopwwiAmis('radios')->name('cash.used')->label(trans('config.used',[],$this->trans))->selectFirst(true)->options($openOrClose)->xs(12),
                         shopwwiAmis('radios')->name('cash.isAutoAudit')->label(trans('config.isAutoAudit',[],$this->trans))->selectFirst(true)->options([['label'=>'手动审核','value'=>'0'],['label'=>'自动审核','value'=>'1']])->xs(12),
@@ -161,7 +162,7 @@ class UserBalanceCashController extends AdminController
                         shopwwiAmis('input-number')->name('cash.min')->precision(2)->label(trans('config.min',[],$this->trans))->min(0.01)->xs(12)->description('单次最低可提现金额'),
                         shopwwiAmis('input-number')->name('cash.max')->precision(2)->label(trans('config.max',[],$this->trans))->min(0)->xs(12)->description('单次最高可提现金额'),
                         shopwwiAmis('combo')->name('cash.rule')->label(trans('config.rule',[],$this->trans))->items([
-                            shopwwiAmis('input-text')->name('time')->label('周期'),
+                            shopwwiAmis('input-text')->name('time')->label('每期')->suffix('天'),
                             shopwwiAmis('input-text')->name('num')->label('次数'),
                         ]),
                     ])

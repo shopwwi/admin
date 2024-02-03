@@ -22,6 +22,7 @@ class CreateSysPaymentTable
             $table->char('wap', 1)->nullable()->default('0')->comment('h5');
             $table->char('app', 1)->nullable()->default('0')->comment('app');
             $table->char('web', 1)->nullable()->default('0')->comment('web');
+            $table->char('mini', 1)->nullable()->default('0')->comment('mini');
             $table->char('status', 1)->nullable()->default('0')->comment('支付状态');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->timestamp('updated_at')->nullable()->comment('更新时间');

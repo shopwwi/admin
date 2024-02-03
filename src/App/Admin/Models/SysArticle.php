@@ -17,7 +17,7 @@
 namespace Shopwwi\Admin\App\Admin\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Shopwwi\Admin\App\Admin\Traits\SysArticleTraits;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 
 class SysArticle extends Model
 {

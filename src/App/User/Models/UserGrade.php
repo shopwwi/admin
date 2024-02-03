@@ -33,7 +33,7 @@
 namespace Shopwwi\Admin\App\User\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Shopwwi\Admin\App\User\Traits\UserGradeTraits;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 
 class UserGrade extends Model
 {

@@ -23,8 +23,8 @@ use Shopwwi\Admin\App\Admin\Models\SysAlbumFiles;
 use Shopwwi\Admin\App\Admin\Models\SysArea;
 use Shopwwi\Admin\App\Admin\Service\DictTypeService;
 use Shopwwi\Admin\Libraries\Amis\BaseController;
+use Shopwwi\Admin\Libraries\Storage;
 use Shopwwi\WebmanAuth\Facade\Auth;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
 use support\Request;
 use support\Response;
 

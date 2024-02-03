@@ -16,7 +16,7 @@
  */
 namespace Shopwwi\Admin\App\User\Models;
 
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 
 class UserSigning extends Model
 {

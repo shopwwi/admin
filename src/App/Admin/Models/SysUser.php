@@ -18,7 +18,7 @@ namespace Shopwwi\Admin\App\Admin\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Shopwwi\Admin\App\Admin\Traits\SysUserTraits;
 use Shopwwi\Admin\Libraries\ArrayStringCast;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
+use Shopwwi\Admin\Libraries\Storage;
 
 
 class SysUser extends Model

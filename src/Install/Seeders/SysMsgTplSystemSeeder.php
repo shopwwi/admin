@@ -8,8 +8,10 @@ class SysMsgTplSystemSeeder
 {
     public static function run()
     {
-        $data = self::data();
-        SysMsgTplSystem::query()->insert($data);
+        $list = self::data();
+        foreach ($list as $item){
+            SysMsgTplSystem::updateOrCreate(['code'=>$item['code']],$item);
+        }
     }
 
     protected static function data(){

@@ -30,7 +30,8 @@ class Install
         'Install/config/plugin/shopwwi/admin' => 'config/plugin/shopwwi/admin',
         'Install/public' => 'public',
         'Install/translations' => 'resource/translations',
-        'Install/view' => 'app/view'
+        'Install/view' => 'app/view',
+        'Install/queue' => 'app/queue'
     );
 
     /**

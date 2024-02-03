@@ -84,7 +84,13 @@ class SysPayment extends Model
      * @var array
      */
     protected $attributes = [
-
+        'wap' => 0,
+        'app' => 0,
+        'web' => 0,
+        'mini' => 0
+    ];
+    protected $casts = [
+        'config' => 'json'
     ];
 
     /**

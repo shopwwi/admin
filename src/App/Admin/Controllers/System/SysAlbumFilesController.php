@@ -19,8 +19,8 @@ use Shopwwi\Admin\App\Admin\Models\SysAlbum;
 use Shopwwi\Admin\App\Admin\Models\SysAlbumFiles;
 use Shopwwi\Admin\App\Admin\Service\AdminService;
 use Shopwwi\Admin\Libraries\Amis\AdminController;
+use Shopwwi\Admin\Libraries\Storage;
 use Shopwwi\WebmanAuth\Facade\Auth;
-use Shopwwi\WebmanFilesystem\Facade\Storage;
 use support\Request;
 
 class SysAlbumFilesController extends AdminController
