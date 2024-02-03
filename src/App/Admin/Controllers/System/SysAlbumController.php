@@ -174,7 +174,63 @@ class SysAlbumController extends AdminController
                         shopwwiAmis('input-array')->name('filesystem.ext_no')->label(trans('filesystem.ext_no',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('filesystem.ext_no',[],$this->trans)],'messages'))->xs(12)->items([
                             'type' => 'input-text'
                         ]),
-                        shopwwiAmis('json-editor')->label(trans('filesystem.storage',[],$this->trans))->name('filesystem.storage')->placeholder(trans('form.input',['attribute'=>trans('filesystem.storage',[],$this->trans)],'messages'))->xs(12),
+                        shopwwiAmis('json-schema')->label(trans('filesystem.storage',[],$this->trans))->name('filesystem.storage')->xs(12)->schema(
+                            shopwwiAmis('object')->properties([
+                                'public' => shopwwiAmis('object')->title('本地(公共)')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                    'root' => shopwwiAmis('string')->title('存储路径'),
+                                    'url' => shopwwiAmis('string')->title('访问地址'),
+                                ]),
+                                'local' => shopwwiAmis('object')->title('本地(私有)')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                    'root' => shopwwiAmis('string')->title('存储路径'),
+                                    'url' => shopwwiAmis('string')->title('访问地址'),
+                                ]),
+                                'ftp' => shopwwiAmis('object')->title('FTP')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                    'host' => shopwwiAmis('string')->title('host'),
+                                    'username' => shopwwiAmis('string')->title('username'),
+                                    'password' => shopwwiAmis('string')->title('password'),
+                                    'url' => shopwwiAmis('string')->title('访问地址'),
+                                ]),
+                                'oss' => shopwwiAmis('object')->title('阿里云')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                    'accessId' => shopwwiAmis('string')->title('accessId'),
+                                    'accessSecret' => shopwwiAmis('string')->title('accessSecret'),
+                                    'bucket' => shopwwiAmis('string')->title('bucket'),
+                                    'endpoint' => shopwwiAmis('string')->title('endpoint'),
+                                    'url' => shopwwiAmis('string')->title('访问地址'),
+                                ]),
+                                'qiniu' => shopwwiAmis('object')->title('七牛云')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                    'accessKey' => shopwwiAmis('string')->title('accessId'),
+                                    'secretKey' => shopwwiAmis('string')->title('accessSecret'),
+                                    'bucket' => shopwwiAmis('string')->title('bucket'),
+                                    'domain' => shopwwiAmis('string')->title('domain'),
+                                    'url' => shopwwiAmis('string')->title('访问地址'),
+                                ]),
+                                'cos' => shopwwiAmis('object')->title('腾讯云')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                    'region' => shopwwiAmis('string')->title('region'),
+                                    'app_id' => shopwwiAmis('string')->title('app_id'),
+                                    'secret_id' => shopwwiAmis('string')->title('secret_id'),
+                                    'bucket' => shopwwiAmis('string')->title('bucket'),
+                                    'read_from_cdn' => shopwwiAmis('string')->title('read_from_cdn'),
+                                    'url' => shopwwiAmis('string')->title('访问地址'),
+                                ]),
+                                's3' => shopwwiAmis('object')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                    'credentials' => shopwwiAmis('object'),
+                                ]),
+                                'memory' => shopwwiAmis('object')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                ]),
+                                'minio' => shopwwiAmis('object')->properties([
+                                    'driver' => shopwwiAmis('string')->title('选定器'),
+                                    'credentials' => shopwwiAmis('object'),
+                                ]),
+                            ])
+                        )
                     ])
                 ])->api('post:' . shopwwiAdminUrl('system/album/setting'))
                     ->actions([
@@ -188,6 +244,9 @@ class SysAlbumController extends AdminController
                 return $this->getAdminView(['json'=>$page,'activeKey'=>'settingSiteAlbumSite']);
             }else{
                 $params = shopwwiParams(['filesystem']);
+                if(is_string($params['filesystem']['storage'])){
+                    $params['filesystem']['storage'] = json_decode($params['filesystem']['storage']);
+                }
                 SysConfigService::updateSetting($params);
             }
             return shopwwiSuccess();

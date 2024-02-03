@@ -47,8 +47,8 @@ class SysPaymentController extends AdminController
         return [
             shopwwiAmisFields(trans('field.id',[],'messages'),'id')->tableColumn(['width'=>60,'sortable'=>true])->showOnUpdate(0)->showOnCreation(0)->showFilter(),
             shopwwiAmisFields(trans('field.name',[],'sysPayment'),'name')->rules('required'),
-            shopwwiAmisFields(trans('field.code',[],'sysPayment'),'code')->rules(['required','chs_unique:sys_payment']),
-            shopwwiAmisFields(trans('field.config',[],'sysPayment'),'config')->column('json-editor',['md'=>12])->showOnIndex(0),
+            shopwwiAmisFields(trans('field.code',[],'sysPayment'),'code')->rules(['required'])->creationRules(['chs_unique:sys_payment'])->updateRules(['chs_as_unique:sys_payment,${id}']),
+            shopwwiAmisFields(trans('field.config',[],'sysPayment'),'config')->column('editor',['md'=>12,'language'=>'json','options'=>['lineNumbers'=>'off']])->showOnIndex(0),
             shopwwiAmisFields(trans('field.wap',[],'sysPayment'),'wap')->filterColumn('select',['options'=>$allowOrUnAllow])
                 ->tableColumn(['quickEdit' => shopwwiAmis('switch')->trueValue(1)->falseValue(0)->mode('inline')
                     ->saveImmediately(true)])->column('radios',['selectFirst'=>true,'options'=>$allowOrUnAllow])
