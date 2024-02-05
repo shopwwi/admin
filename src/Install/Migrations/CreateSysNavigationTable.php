@@ -25,6 +25,7 @@ class CreateSysNavigationTable
             $table->string('position',10)->nullable()->comment('展示位置');
             $table->string('code')->nullable()->comment('高亮码');
             $table->string('app')->nullable()->comment('所属应用');
+            $table->integer('sort')->nullable()->default(999)->comment('显示顺序');
             $table->bigInteger('created_user_id')->nullable()->comment('添加者');
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->bigInteger('updated_user_id')->nullable()->comment('修改者');
