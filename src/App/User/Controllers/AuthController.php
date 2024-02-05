@@ -19,6 +19,7 @@ namespace Shopwwi\Admin\App\User\Controllers;
 
 use Shopwwi\Admin\App\Admin\Service\SysConfigService;
 use Shopwwi\Admin\App\User\Service\AuthService;
+use Shopwwi\Admin\Libraries\Storage;
 use Shopwwi\Admin\Libraries\Validator;
 use Shopwwi\Admin\Logic\WechatMpLogic;
 use Shopwwi\WebmanAuth\Facade\Auth;
@@ -57,12 +58,14 @@ class AuthController extends Controllers
             }
         }
         $backUrl = $request->header('Referer') ?? shopwwiUserUrl('');
+        $imageList = shopwwiConfig('userLoginImages',[['image'=>'/static/uploads/login_bg.png','bgColor'=>'']]);
         $page = $this->getAmisBody(
             shopwwiAmis('link')->body('还没有账号？立即注册')->href(shopwwiUserUrl('auth/register'))->blank(false),
             shopwwiAmis('flex')->className('w-full h-full')->items([
-            shopwwiAmis('carousel')->options([
-                ["image" => ""]
-            ])->height(600)->width(422)->className('must m:hidden border-0'),
+            shopwwiAmis('carousel')->options($imageList)->height(600)->width(422)->itemSchema(shopwwiAmis('tpl')->tpl(<<<HTML
+ <div style="background-image: url('<%= data.image %>'); background-size: cover; background-color:<%= data.bgColor %>; background-repeat: no-repeat; background-position: center center;" class="image <%= data.imageClassName %>"></div>
+HTML
+ ))->className('must m:hidden border-0'),
             shopwwiAmis('wrapper')->className('flex-1')->body(
                 shopwwiAmis('wrapper')->className('login-box')->body([
                         shopwwiAmis('tabs')->tabs([
@@ -351,14 +354,14 @@ class AuthController extends Controllers
                 shopwwiAmis('wrapper')->body(
                     shopwwiAmis('flex')->items([
                         shopwwiAmis('link')->href('/')->body(
-                            shopwwiAmis('image')->src(shopwwiConfig('siteInfo.siteLogo','/static/uploads/logo.svg'))->imageMode('original')->innerClassName('must border-0')
+                            shopwwiAmis('image')->src(Storage::url(shopwwiConfig('siteInfo.siteLogo','/static/uploads/logo.svg')))->imageMode('original')->innerClassName('must border-0')
                         ),
                         shopwwiAmis('wrapper')->body($right)
                     ])->className('max-w-5xl mx-auto')->alignItems('center')->justify('space-between')
                 )->className('hd'),
                 shopwwiAmis('wrapper')->body(
                     $body
-                )->className('max-w-5xl mx-auto must mt-20 px-4 bg-white'),
+                )->className('max-w-5xl mx-auto must mt-20 p-0 bg-white'),
                 shopwwiAmis('flex')->alignItems('center')->items('Shopwwi 智能管理系统')->className('py-4')
             ]
         );

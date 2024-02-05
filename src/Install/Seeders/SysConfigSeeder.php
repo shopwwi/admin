@@ -229,6 +229,9 @@ class SysConfigSeeder
                     ],
                 ]
             ],'is_system' => '1','is_open' => '0'],
+            ['key'=>'userLoginImages','name' => '地图服务设置','value' => [
+               ['image'=>'/static/uploads/user_login_bg.png','bgColor'=>'','imageName'=>'uploads/user_login_bg.png']
+            ],'is_system' => '1','is_open' => '0'],
         ];
     }
 }

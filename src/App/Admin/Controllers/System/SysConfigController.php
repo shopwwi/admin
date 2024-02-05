@@ -212,23 +212,18 @@ class SysConfigController extends AdminController
         try {
             if($request->method() === 'GET'){
                 if($this->format() == 'json'){
-//                    $info = SysConfigService::getFirstOrCreate([
-//                        'key' => 'siteAuthRule'
-//                    ],['name'=>'站点规则设置','value'=>[
-//                          "authCodeVerifyTime" => 5,
-//                          "authCodeResendTime" => 60,
-//                          "authCodeSameIpResendTime" => 30,
-//                          "authCodeSameIpEmailResendTime" => 5,
-//                          "authCodeSamePhoneMaxNum" => 12,
-//                          "authCodeSameEmailMaxNum" => 50,
-//                          "authCodeSameEmailIpMaxNum" => 3,
-//                          "authCodeSameIpMaxNum" => 3
-//                    ]]);
-                    return shopwwiSuccess([]);
+                    $info = SysConfigService::getFirstOrCreate([
+                        'key' => 'userLoginImages'
+                    ],['name'=>'站点规则设置','value'=>[]]);
+                    return shopwwiSuccess($info);
                 }
                 $form = $this->baseForm()->body([
                     shopwwiAmis('grid')->gap('lg')->columns([
-//                        shopwwiAmis('input-text')->name('siteAuthRule.authCodeVerifyTime')->label(trans('siteInfo.siteName',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteName',[],$this->trans)],'messages'))->xs(12),
+                        shopwwiAmis('combo')->name('userLoginImages')->label('登入图片')->multiple(true)->items([
+                            shopwwiAmis('hidden')->name('imageName'),
+                            shopwwiAmis('input-image')->name('image')->autoFill(['imageName'=>'${file_name}'])->receiver(shopwwiAdminUrl('common/upload'))->label('登入图片'),
+                            shopwwiAmis('input-color')->name('bgColor')->label('背景颜色'),
+                        ])
                     ])
                 ])->api('post:' . shopwwiAdminUrl('system/config/rule'))
                     ->actions([
@@ -241,7 +236,7 @@ class SysConfigController extends AdminController
                 if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
                 return $this->getAdminView(['json'=>$page,'activeKey'=>'settingSiteBaseRule']);
             }else{
-                $params = shopwwiParams(['siteAuthRule']);
+                $params = shopwwiParams(['userLoginImages']);
                 SysConfigService::updateSetting($params);
             }
             return shopwwiSuccess();
