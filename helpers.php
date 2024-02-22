@@ -13,9 +13,6 @@
  *-------------------------------------------------------------------------w*
  */
 
-use Shopwwi\Admin\Libraries\StatusCode;
-use Shopwwi\WebmanFilesystem\FilesystemFactory;
-use Webman\Route;
 use support\Redis;
 function shopwwiAdminPath(){
     return __DIR__. DIRECTORY_SEPARATOR . 'src';
@@ -290,49 +287,6 @@ if (!function_exists('shopwwiIsUserOnline')) {
     }
 }
 
-if (!function_exists('shopwwiFileUrl')) {
-    function shopwwiFileUrl($url)
-    {
-        return preg_match('/^http(s)?:\\/\\/.+/', $url) ? $url : config('express.storage.local.url', 'https://www.shopwwi.com/') . $url;
-    }
-}
-if (!function_exists('shopwwiUploadFile')) {
-    function shopwwiUploadFile($file, $path = 'common', $key = '', $disk = 'local')
-    {
-        $filePath = $file->getRealPath();
-        $ext = $file->getUploadExtension();
-        if (!empty($key)) {
-            $realPath = 'uploads/' . $path . '/' . $key . '.' . $ext;
-        } else {
-            $realPath = 'uploads/' . $path . '/' . substr(md5($filePath), 0, 5) . date('YmdHis') . rand(0, 9999) . '.' . $ext;
-        }
-        $filesystem = FilesystemFactory::get($disk);
-        $stream = fopen($filePath, 'r+');
-        $filesystem->writeStream(
-            $realPath,
-            $stream
-        );
-        fclose($stream);
-        $url = shopwwiFileUrl(config("express.storage.{$disk}.url") . $realPath);
-        $info = [
-            'files_name' => $realPath,
-            'files_size' => $file->getSize(),
-            'original_name' => $file->getUploadName(),
-            'files_height' => 0,
-            'files_width' => 0,
-            'files_url' => $url,
-            'mine_type' => $file->getUploadMineType(),
-            'disk' => $disk,
-            'type' => strstr($file->getUploadMineType(), '/', true)
-        ];
-        if (substr($file->getUploadMineType(), 0, 5) == 'image') {
-            $size = getimagesize($file);
-            $info['files_height'] = $size[1];
-            $info['files_width'] = $size[0];
-        }
-        return $info;
-    }
-}
 if (!function_exists('shopwwiClientType')) {
     /**
      * 索引条件
@@ -375,7 +329,7 @@ if (!function_exists('shopwwiAmisFields')) {
 if (!function_exists('shopwwiAdminUrl')) {
     function shopwwiAdminUrl($path,$auto = true,$noUrl = false)
     {
-        $prefix = config('plugin.shopwwi.admin.app.prefix.admin','admin');
+        $prefix = config('plugin.shopwwi.admin.app.prefix.admin','/admin');
         $url = config('plugin.shopwwi.admin.app.base_url');
         if(request()->host() && $auto){
             $url = '//'.request()->host();
@@ -388,7 +342,7 @@ if (!function_exists('shopwwiAdminUrl')) {
         }
         if($noUrl){
             if(!empty($prefix)){
-                return  '/'.$prefix.'/'. trim($path, '/');
+                return  $prefix.'/'. trim($path, '/');
             }
             return  '/'. trim($path, '/');
         }
@@ -399,20 +353,20 @@ if (!function_exists('shopwwiAdminUrl')) {
 if (!function_exists('shopwwiUserUrl')) {
     function shopwwiUserUrl($path,$auto = true,$noUrl = false)
     {
-        $prefix = config('plugin.shopwwi.admin.app.prefix.user','user');
+        $prefix = config('plugin.shopwwi.admin.app.prefix.user','/user');
         $url = config('plugin.shopwwi.admin.app.base_url');
         if(request()->host() && $auto){
             $url = '//'.request()->host();
         }
         if(!empty($prefix)){
-            $url = $url.'/'.$prefix;
+            $url = $url.$prefix;
         }
         if(empty($path)){
             return $url;
         }
         if($noUrl){
             if(!empty($prefix)){
-                return  '/'.$prefix.'/'. trim($path, '/');
+                return  $prefix.'/'. trim($path, '/');
             }
             return  '/'. trim($path, '/');
         }
