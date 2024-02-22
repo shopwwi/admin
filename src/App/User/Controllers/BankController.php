@@ -30,7 +30,7 @@ use support\Response;
 class BankController extends Controllers
 {
     protected $model = \Shopwwi\Admin\App\User\Models\UserCard::class;
-
+    protected $activeKey = 'balanceBank';
     /**
      * 查询绑卡列表
      * @param Request $request
@@ -39,19 +39,23 @@ class BankController extends Controllers
      */
     public function index(Request $request)
     {
-        $user = $this->user(true);
-        if($this->format() == 'json'){
-            $list = $this->getList(new $this->model,function ($q) use ($user) {
-                return $q->where('status',1)->where('user_id',$user->id);
-            },['id'=>'desc'],['user_id','keyword']);
-            return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
+        try {
+            $user = $this->user(true);
+            if($this->format() == 'json'){
+                $list = $this->getList(new $this->model,function ($q) use ($user) {
+                    return $q->where('status',1)->where('user_id',$user->id);
+                },['id'=>'desc'],['user_id','keyword']);
+                return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
+            }
+            $page =$this->basePage()->body([
+                shopwwiAmis('alert')->title('我的银行卡')->className('must m-0')
+                    ->body("绑定的银行卡不可修改，可解绑后重新绑定"),
+                UserBankService::getIndexAmis()]);
+            if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
+            return $this->getUserView(['seoTitle'=>'我的银行卡','menuActive'=>'balanceBank','json'=>$page]);
+        }catch (\Exception $e){
+            return $this->backError($e);
         }
-        $page =$this->basePage()->body([
-            shopwwiAmis('alert')->title('我的银行卡')->className('must m-0')
-                ->body("绑定的银行卡不可修改，可解绑后重新绑定"),
-            UserBankService::getIndexAmis()]);
-        if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
-        return $this->getUserView(['seoTitle'=>'我的银行卡','menuActive'=>'balanceBank','json'=>$page]);
     }
 
     /**

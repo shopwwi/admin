@@ -125,4 +125,7 @@ class UserGrade extends Model
     {
         return $this->image_name ? Storage::url($this->image_name):'';
     }
+    public function group(){
+        return $this->hasOne(UserGradeGroup::class,'id','group_id');
+    }
 }

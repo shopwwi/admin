@@ -28,6 +28,7 @@ class AddressController extends Controllers
 {
 
     protected $model = \Shopwwi\Admin\App\User\Models\UserAddress::class;
+    protected $activeKey = 'authAddress';
     /**
      * 查询消费日志
      * @param Request $request

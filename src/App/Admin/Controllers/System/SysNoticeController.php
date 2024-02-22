@@ -29,8 +29,9 @@ class SysNoticeController extends AdminController
     protected $trans = 'sysNotice'; // 语言文件名称
     protected $queryPath = 'system/notice'; // 完整路由地址
     protected $adminOp = true;
-    protected $useCreateDialog = 2;
-    protected $useEditDialog = 2;
+    protected $buttonCache = true;
+    protected $useCreateDialog = 0;
+    protected $useEditDialog = 0;
     protected $useShowDialog = 2;
     protected $useEditDialogSize = 'lg';
     protected $useCreateDialogSize = 'lg';

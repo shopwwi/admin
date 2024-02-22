@@ -49,14 +49,14 @@ class SysMenuController extends AdminController
         $yesOrNo = DictTypeService::getAmisDictType('yesOrNo');
         $sysMenuType = DictTypeService::getAmisDictType('sysMenuType');
         return [
-            shopwwiAmisFields(trans('field.id',[],'messages'),'id')->tableColumn(['width'=>60,'sortable'=>true])->rules('required')->showFilter(),
+            shopwwiAmisFields(trans('field.id',[],'messages'),'id')->tableColumn(['width'=>60,'sortable'=>true])->showFilter(),
             shopwwiAmisFields(trans('field.name',[],'sysMenu'),'name'),
             shopwwiAmisFields(trans('field.pid',[],'sysMenu'),'pid')->rules(['bail','nullable','numeric','min:0'])->column('tree-select',['source'=>'$items','labelField'=>'name','valueField'=>'id']),
             shopwwiAmisFields(trans('field.icon',[],'sysMenu'),'icon'),
             shopwwiAmisFields(trans('field.sort',[],'messages'),'sort')->tableColumn(['width'=>60,'sortable'=>true])->rules(['bail','required','numeric','min:0','max:999'])->column('input-number',['min'=>0,'max'=>999]),
             shopwwiAmisFields(trans('field.path',[],'sysMenu'),'path'),
             shopwwiAmisFields(trans('field.component',[],'sysMenu'),'component'),
-            shopwwiAmisFields(trans('field.highlight',[],'sysMenu'),'highlight')->showOnIndex(2),
+            shopwwiAmisFields(trans('field.key',[],'sysMenu'),'key')->showOnIndex(2)->rules('required'),
             shopwwiAmisFields(trans('field.menu_type',[],'sysMenu'),'menu_type')->rules('required')
                 ->tableColumn(['sortable'=>true,'align'=>'center','type'=>'mapping','map'=>$this->toMappingSelect($sysMenuType,'${menu_type}','default')])
                 ->column('select',['options'=>$sysMenuType]),
@@ -156,7 +156,7 @@ class SysMenuController extends AdminController
                 (new $this->model)->create([
                     'name' => $name,
                     'pid' => $create->id,
-                    'id' => $create->language.ucfirst($val),
+                    'key' => $create->key.ucfirst($val),
                     'perms' => $perms,
                     'menu_type' => 'F'
                 ]);

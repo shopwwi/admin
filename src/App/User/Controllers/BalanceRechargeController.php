@@ -29,6 +29,7 @@ class BalanceRechargeController extends Controllers
 {
     public $routePath = 'recharge'; // 当前路由模块不填写则直接控制器名
     protected $model = \Shopwwi\Admin\App\User\Models\UserBalanceRecharge::class;
+    protected $activeKey = 'balanceRecharge';
 
     /**
      * 查询充值日志
@@ -38,20 +39,24 @@ class BalanceRechargeController extends Controllers
      */
     public function index(Request $request)
     {
-        $user = $this->user();
-        if($this->format() == 'json'){
-            $list = $this->getList(new $this->model,function ($q) use ($user) {
-                return $q->where('user_id',$user->id);
-            },['id'=>'desc'],['user_id','keyword']);
-            return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
-        }
+        try {
+            $user = $this->user();
+            if($this->format() == 'json'){
+                $list = $this->getList(new $this->model,function ($q) use ($user) {
+                    return $q->where('user_id',$user->id);
+                },['id'=>'desc'],['user_id','keyword']);
+                return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
+            }
 
-        $page =$this->basePage()->body([
-            shopwwiAmis('alert')->title('我的余额')->className('must m-0')
-                ->body("可用余额：<b class='text-success'>$user->available_balance 元</b>。 <br/> 冻结余额：<b class='text-danger'>$user->frozen_balance 元</b>。"),
-            BalanceRechargeService::getIndexAmis()]);
-        if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
-        return $this->getUserView(['seoTitle'=>'我的充值','menuActive'=>'balanceRecharge','json'=>$page]);
+            $page =$this->basePage()->body([
+                shopwwiAmis('alert')->title('我的余额')->className('must m-0')
+                    ->body("可用余额：<b class='text-success'>$user->available_balance 元</b>。 <br/> 冻结余额：<b class='text-danger'>$user->frozen_balance 元</b>。"),
+                BalanceRechargeService::getIndexAmis()]);
+            if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
+            return $this->getUserView(['seoTitle'=>'我的充值','menuActive'=>'balanceRecharge','json'=>$page]);
+        }catch (\Exception $e){
+            return $this->backError($e);
+        }
     }
 
     /**

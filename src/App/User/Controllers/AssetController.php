@@ -30,6 +30,7 @@ use support\Request;
 
 class AssetController extends Controllers
 {
+    protected $activeKey = 'authAddress';
     /**
      * 会员成长值
      * @param Request $request

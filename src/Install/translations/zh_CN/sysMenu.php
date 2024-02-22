@@ -12,7 +12,7 @@ return [
     'field' => [
         'id' => '菜单ID',
         'name' => '菜单名称',
-        'language' => '唯一标识',
+        'key' => '唯一标识',
         'pid' => '父菜单ID',
         'sort' => '显示顺序',
         'path' => '路由地址',

@@ -29,7 +29,7 @@
         .amis-scope{background-color: var(--colors-neutral-fill-10); overflow: auto}
     </style>
     <script>
-        var shopwwiMallUrl = "{{ shopwwiMallUrl('') }}",shopwwiSiteUrl = "{{ shopwwiMallUrl('') }}",shopwwiUserUrl = "{{ shopwwiUserUrl('') }}";
+        var shopwwiUserUrl = "{{ shopwwiUserUrl('') }}",shopwwiUserPrefix = '{{ config('plugin.shopwwi.admin.app.prefix.user','/user') }}';
     </script>
 </head>
 <body>
@@ -45,18 +45,20 @@
     <div class="header">
         <div class="wrap py-4 flex m:wrap">
             <div class="flex items-center flex-shrink-0">
-                <a href="{{shopwwiUserUrl('')}}" class="logo"><img src="{{shopwwiConfig('siteInfo.siteLogo','')}}" class="w-full h-full" /></a>
+                <a href="{{shopwwiUserUrl('')}}" class="logo"><img src="{{ \Shopwwi\Admin\Libraries\Storage::url(shopwwiConfig('siteInfo.siteLogo','')) }}" class="w-full h-full" /></a>
                 <h1 class="">会员中心</h1>
             </div>
-            <div class="flex-1 flex mx-4 items-center">
-                <div class="nav-link"><a href="">首页</a></div>
-                <div class="nav-link"><a href="">账户设置</a></div>
-                <div class="nav-link"><a href="">商城</a></div>
+            <div class="flex-1 flex mx-4 items-center justify-end" style="border-right:1px solid var(--borderColor);">
+                @foreach($centerNavigationList as $k=>$nav)
+                    <div class="nav-link @if($nav->code == $activeKey) active @endif">
+                        <a href="{{ $nav->link }}" rel="nofollow" @if($nav->is_blank) target="_blank" @endif>{{ $nav->name }}</a>
+                    </div>
+                @endforeach
             </div>
             <div class="flex items-center flex-shrink-0">
                 <div class="cxd-Badge">
                     <div class="text-light bg-primary rounded-full w-6 h-6 flex items-center justify-center"><i class="ri-notification-2-fill"></i> </div>
-                    <span class="cxd-Badge-text cxd-Badge--top-right cxd-Badge--danger" style="border-radius: 8px; height: 18px; line-height: 16px;">25</span>
+                    <span class="cxd-Badge-text cxd-Badge--top-right cxd-Badge--danger" style="border-radius: 8px; height: 18px; line-height: 16px;">@{{msgCount}}</span>
                 </div>
                 <a href="{{shopwwiUserUrl('message')}}" class="ml-2">消息</a>
             </div>
@@ -64,17 +66,7 @@
     </div>
 <div class="flex wrap m:wrap mt-4">
     @section('sidebar')
-        <div class="user-nav" :class="{'is-close-nav':domBind.menuShow}">
-            <div class="replace h-full overflow-y-auto">
-                <ul class="cxd-AsideNav-list">
-                    @foreach($userMenus as $item)
-                        @include('user.layouts.menu',['item'=>$item])
-                    @endforeach
-                </ul>
-                <div class="user-nav-back" @click="domBind.menuShow =! domBind.menuShow"><i class="ri-arrow-left-double-line"></i></div>
-            </div>
-
-        </div>
+        <wwi-user-menu></wwi-user-menu>
     @show
         <div class="overflow-hidden box-border flex-1 pc:ml-4">
             @yield('content')
@@ -85,37 +77,32 @@
 </body>
 <script src="/static/js/common.js"></script>
 <script src="/static/js/user.js"></script>
+@include('user.layouts.menu')
 <script>
     const { createApp } = Vue;
     let vueComponents = {},vueData = {},vueMethods = {},vueAppend = {};
 </script>
 @yield('js')
 <script>
-    useUtilsTabs('.user-nav .cxd-AsideNav-item','is-open');
     const wwiApp = createApp({
-        components:{...vueComponents },
+        components:{WwiUserMenu,...vueComponents },
         data(){
             return {
                 domBind:{},
-                menuList:@json($userMenus),
+                msgCount:0,
                 ...vueData
             }
         },
-        mounted(){
-            const activeMenu = '{{$activeKey??''}}';
-            useUtilsTabs('.user-nav .cxd-AsideNav-item','is-open');
-        },
         ...vueAppend,
+        mounted(){
+            setInterval(()=>this.getCount(), 60000);
+            this.getCount()
+        },
         methods: {
-            handleSelectMenu(dom,key){
-                const className = 'is-open';
-                console.log(dom.target)
-                if(dom.target.parentNode.classList.contains(className)){
-                    dom.target.parentNode.classList.remove(className);
-                }else{
-                    dom.target.parentNode.classList.add(className);
-                }
-
+            getCount(){
+               useFetch(this,"{{ shopwwiUserUrl('message/count') }}").then(res=>{
+                   this.msgCount = res.data.count;
+               })
             },
             ...vueMethods
         }

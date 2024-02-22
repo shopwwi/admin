@@ -2,6 +2,9 @@
 
 namespace Shopwwi\Admin\App\User\Service;
 
+use Shopwwi\Admin\App\User\Models\UserGrade;
+use Shopwwi\LaravelCache\Cache;
+
 class GradeService
 {
     public static function getIndexAmis()
@@ -22,7 +25,20 @@ class GradeService
                 ]);
     }
 
-    public static function getUserGrade(){
-
+    public static function getGradeList(){
+        $list = Cache::rememberForever('shopwwiUserGrade', function () {
+            return UserGrade::with('group')->get();
+        });
+        return $list;
     }
+
+    /**
+     * 清理地区缓存
+     * @return void
+     */
+    public static function clear()
+    {
+        Cache::forget("shopwwiUserGrade");
+    }
+
 }

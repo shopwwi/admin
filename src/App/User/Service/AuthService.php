@@ -58,7 +58,7 @@ class AuthService
         PointService::optionsPoints('LOGIN',$info->id);
         // 发放成长值
         GrowthService::optionsPoints('LOGIN',$info->id);
-        return Auth::guard('member')->fail()->login($info);
+        return Auth::guard('user')->fail()->login($info);
     }
 
     /**
@@ -103,7 +103,7 @@ class AuthService
         PointService::optionsPoints('LOGIN',$info->id);
         // 发放成长值
         GrowthService::optionsPoints('LOGIN',$info->id);
-        return Auth::guard('member')->fail()->login($info);
+        return Auth::guard('user')->fail()->login($info);
     }
 
     /**
@@ -188,7 +188,7 @@ class AuthService
             throw new \Exception(trans('errorData',[],'messages'));
         }
 
-        return Auth::guard('member')->fail()->login($user);
+        return Auth::guard('user')->fail()->login($user);
     }
 
     /**

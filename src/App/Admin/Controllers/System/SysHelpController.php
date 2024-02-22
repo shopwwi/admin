@@ -30,6 +30,7 @@ class SysHelpController extends AdminController
     protected $queryPath = 'system/helps'; // 完整路由地址
     protected $activeKey = 'settingContentHelpIndex';
     protected $useHasRecovery = true;
+    protected $buttonCache = true;
     protected $useCreateDialog = 0;
     protected $useEditDialog = 0;
     protected $useShowDialog = 2;

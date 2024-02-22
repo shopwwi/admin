@@ -38,6 +38,7 @@ class AuthController extends Controllers
      */
     public function login(Request $request)
     {
+
         if($this->format() == 'json'){
             $validator = Validator::make($request->all(), [
                 'account' => 'required|min:3|max:28',

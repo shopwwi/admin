@@ -18,6 +18,7 @@
 namespace Shopwwi\Admin\App\User\Controllers;
 
 use Closure;
+use Shopwwi\Admin\App\Admin\Service\SysNavigationService;
 use Shopwwi\Admin\App\User\Service\UserMenuService;
 use Shopwwi\Admin\Libraries\Appoint;
 use Shopwwi\WebmanAuth\Facade\Auth;
@@ -25,7 +26,7 @@ use support\View;
 
 class Controllers
 {
-    protected $guard = "member";
+    protected $guard = "user";
     protected   $key = 'id';
     protected $trans = 'messages';
     protected $activeKey = '';
@@ -52,9 +53,14 @@ class Controllers
         $user = $this->user(true,false);
         if($user == null) return redirect(shopwwiUserUrl('auth/login'));
         View::assign('userInfo',$user);
+        $navigationList = SysNavigationService::getList();
+     //   View::assign('topNavigationList',$navigationList->where('app','user')->where('position',0)->values());
+        View::assign('centerNavigationList',$navigationList->where('app','user')->where('position',1)->values());
+    //    View::assign('bottomNavigationList',$navigationList->where('app','user')->where('position',2)->values());
         $menus = UserMenuService::getMenusList();
         $menuList = Appoint::ShopwwiChindNode(json_decode($menus->toJson(),true));
         View::assign('userMenus',json_decode(json_encode($menuList)));
+        View::assign('activeKey',$this->activeKey);
         return view($data['tpl']??'user/view',$data,'',$plugin);
     }
 

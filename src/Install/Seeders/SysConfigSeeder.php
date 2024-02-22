@@ -20,21 +20,21 @@ class SysConfigSeeder
         return [
             ['key'=>'siteInfo','name' => '站点信息','value' => [
                 'siteName' => 'ShopWWI智能管理系统',
-                'siteUrl' => '',
+                'siteUrl' => 'http://127.0.0.1:8787',
                 'siteIcp' => '',
                 'siteLogo' => 'uploads/common/logo.svg',
-                'siteIcon' => '',
-                'siteKeyword' => '',
-                'siteDescription' => '',
+                'siteIcon' => 'uploads/common/logo-icon.png',
+                'siteKeyword' => '多用户商城系统,shopwwi商城系统,B2B2C模式,多卖家',
+                'siteDescription' => '购买多用户商城系统，找shopwwi.com',
                 'siteStatus' => '1',
                 'siteCloseRemark' => '',
-                'siteEmail' => '',
+                'siteEmail' => '8988354@qq.com',
                 'sitePhone' => '',
                 'siteFlowCode' => ''
             ],'is_system' => '1','is_open' => '1'],
             ['key'=>'siteDefaultImage','name' => '默认图片配置','value' => [
-                'userAvatar' => 'uploads/default-avatar.png', // 用户默认头像
-                'noPic' => 'uploads/default-image.png', //默认图片
+                'userAvatar' => 'uploads/default_avatar.png', // 用户默认头像
+                'noPic' => 'uploads/default_image.png', //默认图片
             ],'is_system' => '1','is_open' => '1'],
             ['key'=>'sms','name' => '短信服务','value' => [
                 'used'=>'0',
@@ -229,7 +229,7 @@ class SysConfigSeeder
                     ],
                 ]
             ],'is_system' => '1','is_open' => '0'],
-            ['key'=>'userLoginImages','name' => '地图服务设置','value' => [
+            ['key'=>'userLoginImages','name' => '登入图片设置','value' => [
                ['image'=>'/static/uploads/user_login_bg.png','bgColor'=>'','imageName'=>'uploads/user_login_bg.png']
             ],'is_system' => '1','is_open' => '0'],
         ];

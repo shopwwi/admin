@@ -15,13 +15,13 @@ class CreateSysMenuTable
     public static function up()
     {
         Db::connection()->getSchemaBuilder()->create('sys_menu', function (Blueprint $table) {
-            $table->string('id')->autoIncrement()->comment('菜单ID');
+            $table->increments('id')->comment('菜单ID');
             $table->string('name', 50)->comment('菜单名称');
             $table->string('pid')->nullable()->nullable()->comment('父菜单ID');
             $table->integer('sort')->nullable()->default(999)->comment('显示顺序');
             $table->string('path', 200)->nullable()->default('')->comment('路由地址');
             $table->string('component')->nullable()->comment('组件路径');
-            $table->string('highlight')->nullable()->comment('菜单高亮值');
+            $table->string('key')->nullable()->comment('菜单唯一标识');
             $table->char('is_frame', 1)->nullable()->default('0')->comment('是否为外链（1是 0否）');
             $table->char('is_cache', 1)->nullable()->default('0')->comment('是否缓存（1缓存 0不缓存）');
             $table->char('menu_type', 1)->nullable()->default('M')->comment('菜单类型（M目录 C菜单 F按钮）');

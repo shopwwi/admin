@@ -20,6 +20,7 @@ use Shopwwi\Admin\App\Admin\Service\AmisService;
 use Shopwwi\Admin\App\Admin\Service\DictTypeService;
 use Shopwwi\Admin\App\User\Models\UserGradeGroup;
 use Shopwwi\Admin\Libraries\Amis\AdminController;
+use support\Request;
 
 
 class UserGradeController extends AdminController
@@ -29,6 +30,8 @@ class UserGradeController extends AdminController
     protected $trans = 'userGrade'; // 语言文件名称
     protected $queryPath = 'user/grades'; // 完整路由地址
     protected $activeKey = 'userRightsGroup';
+    protected $useIndexBack = true;
+    protected $buttonNext = false;
     /**
      * 路由注册
      * @var string
@@ -48,7 +51,7 @@ class UserGradeController extends AdminController
         $groupList = UserGradeGroup::get(['id as value','name as label']);
         return [
             shopwwiAmisFields(trans('field.id',[],'messages'),'id')->tableColumn(['width'=>60,'sortable'=>true])->showOnUpdate(0)->showOnCreation(0)->showFilter(),
-            shopwwiAmisFields(trans('field.group_id',[],'userGrade'),'group_id')->rules(['bail','required','numeric','min:1'])->column('select',['options'=>$groupList,'disabled'=>true])->showOnUpdate(3),
+            shopwwiAmisFields(trans('field.group_id',[],'userGrade'),'group_id')->rules(['bail','required','numeric','min:1'])->column('select',['options'=>$groupList,'disabled'=>true])->showOnUpdate(3)->showOnIndex(2),
             shopwwiAmisFields(trans('field.level',[],'userGrade'),'level')->rules(['bail','required','numeric','min:1'])->column('input-number',['min'=>1,'description'=>'请输入数字等级,数字越大等级越大,升级根据此数字从小往大，不可重复']),
             shopwwiAmisFields(trans('field.name',[],'userGrade'),'name')->rules('required'),
             shopwwiAmisFields(trans('field.ext_name',[],'userGrade'),'ext_name')->rules('required'),
@@ -92,9 +95,27 @@ class UserGradeController extends AdminController
                     ['type'=>'growth','desc'=> '成长值','used'=>'0','num' => 0], // 成长值
                     ['type'=>'points','desc'=> '积分累计','used'=>'0','num' => 0], // 积分数量
                 ]
-
             ]
         ];
+    }
+
+    public function list(Request $request)
+    {
+        return $this->jsonList(false,[]);
+    }
+
+    /**
+     * 获取数据之后
+     * @param $list
+     * @return mixed
+     */
+    protected function afterJsonList($list){
+        $groupList = UserGradeGroup::get();
+        $list->map(function ($item) use ($groupList) {
+            $item->group_name = $groupList->where('id',$item->group_id)->value('name');
+        });
+        //  $data['list'] = $list->items();
+        return $list->items();
     }
 
 }

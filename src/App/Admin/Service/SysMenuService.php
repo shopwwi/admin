@@ -36,7 +36,7 @@ class SysMenuService
     public static function getAmisMenusList()
     {
         $list = Cache::rememberForever('shopwwiAdminAmisMenu', function () {
-            return SysMenu::orderBy('sort','asc')->orderBy('id','asc')->where('status',1)->get(['id','name','pid','path','is_frame','is_cache','menu_type','visible','icon']);
+            return SysMenu::orderBy('sort','asc')->orderBy('id','asc')->where('status',1)->get(['id','name','pid','path','is_frame','is_cache','menu_type','visible','icon','key']);
         });
         return $list;
     }

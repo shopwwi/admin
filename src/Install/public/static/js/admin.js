@@ -6,30 +6,6 @@
         document.documentElement.removeAttribute('theme-mode');
     }
 })();
-function useUtilsTopTreeNodes(list,keyCol,keyVal){
-    let newList = [];
-    list.forEach(item=>{
-        if(item.children !== undefined && item.children.length !== 0){
-            let leaf = useUtilsTopTreeNodes(item.children,keyCol,keyVal);
-            if(leaf !== undefined){
-                item.children = leaf;
-                newList.push(item);
-            }else{
-                if(item[keyCol] === keyVal){
-                //    delete item['children'];
-                    newList.push(item);
-                }
-            }
-        }else{
-            if(item[keyCol] === keyVal){
-                newList.push(item);
-            }
-        }
-    });
-    if(newList != undefined && newList.length != 0){
-        return newList;
-    }
-}
 
 function useUtilsTabs(dom,className,cheep = false,object=(key,open)=>{}){
     const nodeList = document.querySelectorAll(dom); // 获取菜单元素

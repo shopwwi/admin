@@ -26,7 +26,7 @@ use support\Request;
 class PointsController extends Controllers
 {
     public $routeAction = ['log'=>['GET','POST','OPTIONS']]; //方法注册 未填写的则直接any
-
+    protected $activeKey = 'myPoint';
     /**
      * 我的积分列表
      * @param Request $request
@@ -34,20 +34,24 @@ class PointsController extends Controllers
      */
     public function index(Request $request)
     {
-        $user = $this->user();
-        if($this->format() == 'json'){
-            $list = $this->getList(new UserPointLog(),function ($q) use ($user) {
-                return $q->where('user_id',$user->id);
-            },['id'=>'desc'],['user_id']);
-            return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
-        }
+        try {
+            $user = $this->user();
+            if($this->format() == 'json'){
+                $list = $this->getList(new UserPointLog(),function ($q) use ($user) {
+                    return $q->where('user_id',$user->id);
+                },['id'=>'desc'],['user_id']);
+                return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
+            }
 
-        $page =$this->basePage()->body([
-            shopwwiAmis('alert')->title('我的积分')->className('must m-0')
-                ->body("可用积分：<b class='text-success'>$user->available_points </b>。 <br/> 冻结积分：<b class='text-danger'>$user->frozen_points </b>。"),
-            PointLogService::getIndexAmis()]);
-        if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
-        return $this->getUserView(['seoTitle'=>'我的积分','menuActive'=>'myPoint','json'=>$page]);
+            $page =$this->basePage()->body([
+                shopwwiAmis('alert')->title('我的积分')->className('must m-0')
+                    ->body("可用积分：<b class='text-success'>$user->available_points </b>。 <br/> 冻结积分：<b class='text-danger'>$user->frozen_points </b>。"),
+                PointLogService::getIndexAmis()]);
+            if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
+            return $this->getUserView(['seoTitle'=>'我的积分','menuActive'=>'myPoint','json'=>$page]);
+        }catch (\Exception $e){
+            return $this->backError($e);
+        }
     }
 
 }

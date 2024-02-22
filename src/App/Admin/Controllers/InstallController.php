@@ -235,6 +235,7 @@ EOF;
 
             // 写入初始数据
             \Webman\RedisQueue\Client::send('admin-install', '');
+            \Webman\RedisQueue\Client::send('admin-area', '');
 
             //新增一个标识文件，用来屏蔽重新安装
             $fp = @fopen(public_path().'/lock','wb+');

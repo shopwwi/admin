@@ -30,6 +30,7 @@ class SysArticleController extends AdminController
     protected $trans = 'sysArticle'; // 语言文件名称
     protected $queryPath = 'system/articles'; // 完整路由地址
     protected $activeKey = 'settingContentArticleIndex';
+    protected $buttonCache = true;
     protected $useCreateDialog = 0;
     protected $useEditDialog = 0;
     protected $useShowDialog = 2;

@@ -5,7 +5,7 @@
                 <div class="wwi-layout-menuA flex-shrink-0">
                     <div class="logo"><img src="/static/uploads/common/logo-icon.png" style="object-fit: contain;"/></div>
                     <div id="leftMenu" class="menu-box">
-                        <div class="flex flex-col text-center menu-item" v-for="item in menuList" @click="handleMenuA(item)" :class="{'menu-item-active':oneActive === item.id}">
+                        <div class="flex flex-col text-center menu-item" v-for="item in menuList" @click="handleMenuA(item)" :class="{'menu-item-active':oneActive === item.key}">
                             <i :class="item.icon" v-if="item.icon"></i>
                             <span class="font-bold text-md ">@{{ item.name }}</span>
                         </div>
@@ -21,10 +21,10 @@
                                 expand-mutex width="100%"
                         >
                             <template v-for="(item,index) in menuLevelList" :key="item.id">
-                                <t-submenu :value="item.id" :title="item.name" v-if="item.children && item.children.length > 0">
-                                    <t-menu-item style="padding-left:2rem" :value="item2.id" :router="{}" v-for="item2 in item.children" :key="item2.id" @click="handleMenuItem(item2,3)">@{{ item2.name }}</t-menu-item>
+                                <t-submenu :value="item.key" :title="item.name" v-if="item.children && item.children.length > 0">
+                                    <t-menu-item style="padding-left:2rem" :value="item2.key" :router="{}" v-for="item2 in item.children" :key="item2.id" @click="handleMenuItem(item2,3)">@{{ item2.name }}</t-menu-item>
                                 </t-submenu>
-                                <t-menu-item :value="item.id" :key="item.id" :router="{}" @click="handleMenuItem(item,2)" v-else>@{{ item.name }}</t-menu-item>
+                                <t-menu-item :value="item.key" :key="item.id" :router="{}" @click="handleMenuItem(item,2)" v-else>@{{ item.name }}</t-menu-item>
                             </template>
 
                         </t-menu>
@@ -43,7 +43,7 @@
                         </div>
                     </template>
 
-                    <t-menu-item :value="item.id" @click="handleMenuItem(item,4)" :router="{}" v-for="(item,index) in menuForList" :key="item.id">@{{ item.name }}</t-menu-item>
+                    <t-menu-item :value="item.key" @click="handleMenuItem(item,4)" :router="{}" v-for="(item,index) in menuForList" :key="item.id">@{{ item.name }}</t-menu-item>
                     <template #operations>
                         <t-tooltip placement="bottom" content="访问首页">
                             <t-button theme="default" shape="square" variant="text" href="{{ shopwwiUserUrl('') }}" target="_blank">
@@ -69,7 +69,7 @@
                                     <t-dropdown-item class="operations-dropdown-container-item" @click="handleNav('{{ shopwwiAdminUrl('system/cache') }}')">
                                         <t-icon name="delete-time" class="mr-2"></t-icon>清空缓存
                                     </t-dropdown-item>
-                                    <t-dropdown-item class="operations-dropdown-container-item" @click="handleNav('{{ shopwwiAdminUrl('auth/logout') }}')">
+                                    <t-dropdown-item class="operations-dropdown-container-item" @click="handleLogout">
                                         <t-icon name="poweroff" class="mr-2"></t-icon>退出登录
                                     </t-dropdown-item>
                                 </t-dropdown-menu>
@@ -97,6 +97,7 @@
         </t-layout>
     </t-layout>
 </template>
+
 <script>
     const WwiLayout = {
         name: 'WwiLayout',
@@ -118,20 +119,20 @@
             }
         },
         mounted(){
-            const openKeys = useUtilsConvertTreeData(useUtilsTopTreeNodes(JSON.parse(JSON.stringify(this.menuList)), 'id', this.activeMenu));
+            const openKeys = useUtilsConvertTreeData(useUtilsTopTreeNodes(JSON.parse(JSON.stringify(this.menuList)), 'key', this.activeMenu));
             if(openKeys && openKeys.length > 0){
                 if (openKeys.length > 1) {
-                    this.twoActive = openKeys[1].id;
-                    this.nowActive = openKeys[1].id;
+                    this.twoActive = openKeys[1].key;
+                    this.nowActive = openKeys[1].key;
                 }
                 if (openKeys.length > 2) {
-                    this.threeActive = openKeys[2].id;
-                    this.nowActive = openKeys[2].id;
+                    this.threeActive = openKeys[2].key;
+                    this.nowActive = openKeys[2].key;
                 }
                 if (openKeys.length > 3) {
-                    this.forActive = openKeys[3].id;
+                    this.forActive = openKeys[3].key;
                 }
-                this.oneActive = openKeys[0].id;
+                this.oneActive = openKeys[0].key;
             }
             document.addEventListener('fullscreenchange', this.toggleFullscreenIcon);
         },
@@ -140,7 +141,7 @@
                 let menus = [];
                 if (this.menuList.length > 0) {
                     this.menuList.forEach(item => {
-                        if (this.oneActive === item.id && (item.children && item.children.length > 0)) {
+                        if (this.oneActive === item.key && (item.children && item.children.length > 0)) {
                             menus = item.children;
                         }
                     })
@@ -153,7 +154,7 @@
                     this.menuLevelList.forEach(item => {
                         if (item.children && item.children.length > 0) {
                             item.children.forEach(item2=>{
-                                if (this.threeActive === item2.id && (item2.children && item2.children.length > 0)) {
+                                if (this.threeActive === item2.key && (item2.children && item2.children.length > 0)) {
                                     menus = item2.children.filter((item3)=> item3.visible === '1')
                                 }
                             })
@@ -169,10 +170,10 @@
              * @param item
              */
             handleMenuA(item){
-                if(this.menuAKey === item.id){
+                if(this.menuAKey === item.key){
                     return;
                 }
-                this.oneActive = item.id;
+                this.oneActive = item.key;
                 if(item.children && item.children.length > 0){
                     return ;
                 }
@@ -191,7 +192,7 @@
                         });
                         if(menus.length > 0){
                             if(step === 3){
-                                this.threeActive = item.id;
+                                this.threeActive = item.key;
                             }
                             if(menus[0].is_frame == 1) return window.open(shopwwiAdminUrl + menus[0].path);
                             return this.handleVueRouter(menus[0],step + 1);
@@ -205,9 +206,9 @@
 
             },
             handleVueRouter(item,step){
-                if(step === 2) this.twoActive = item.id;
-                if(step === 3) this.threeActive = item.id;
-               if(step === 4) this.forActive = item.id;
+                if(step === 2) this.twoActive = item.key;
+                if(step === 3) this.threeActive = item.key;
+               if(step === 4) this.forActive = item.key;
                 if(this.$router && item.is_cache ==1){
                     const prefix = '/' + shopwwiAdminPrefix;
                     return this.$router.push(prefix + item.path);
@@ -235,7 +236,6 @@
             },
             handleTheme(){
                 const theme = localStorage.getItem('shopwwiAdminTheme');
-
                 if(theme === 'dark'){
                     this.themeIcon = 'sunny';
                     console.log(theme)
@@ -246,7 +246,11 @@
                     this.themeIcon = 'moon';
                     document.documentElement.setAttribute('theme-mode', 'dark');
                 }
-
+            },
+            handleLogout(){
+                useFetch(this,'{{ shopwwiAdminUrl('auth/logout') }}').then(res=>{
+                    window.location.reload();
+                })
             }
         }
     };

@@ -16,7 +16,7 @@ return [
         'avatar' => '会员头像',
         'password' => '会员密码',
         'pay_pwd' => '会员支付密码',
-        'grade_id' => '等级编号',
+        'grade_id' => '会员等级',
         'balance' => '累计余额',
         'available_balance' => '可用余额',
         'frozen_balance' => '冻结余额',

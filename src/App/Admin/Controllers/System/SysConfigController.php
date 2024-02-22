@@ -20,6 +20,7 @@ use Shopwwi\Admin\App\Admin\Service\AmisService;
 use Shopwwi\Admin\App\Admin\Service\DictTypeService;
 use Shopwwi\Admin\App\Admin\Service\SysConfigService;
 use Shopwwi\Admin\Libraries\Amis\AdminController;
+use Shopwwi\Admin\Libraries\Storage;
 use Shopwwi\Admin\Libraries\Validator;
 use support\Request;
 
@@ -161,6 +162,8 @@ class SysConfigController extends AdminController
                         'sitePhone' => '',
                         'siteFlowCode' => ''
                     ]]);
+                    $info['siteInfo']['siteLogoUrl'] = Storage::url($info['siteInfo']['siteLogo'] ?? '');
+                    $info['siteInfo']['siteIconUrl'] = Storage::url($info['siteInfo']['siteIcon'] ?? '');
                     return shopwwiSuccess($info);
                 }
                 $openOrClose = DictTypeService::getAmisDictType('openOrClose');
@@ -168,8 +171,12 @@ class SysConfigController extends AdminController
                     shopwwiAmis('grid')->gap('lg')->columns([
                         shopwwiAmis('input-text')->name('siteInfo.siteName')->label(trans('siteInfo.siteName',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteName',[],$this->trans)],'messages'))->xs(12),
                         shopwwiAmis('input-text')->name('siteInfo.siteUrl')->label('站点链接')->placeholder('请输入站点链接')->xs(12),
-                        shopwwiAmis('input-image')->name('siteInfo.siteLogo')->label(trans('siteInfo.siteLogo',[],$this->trans))->xs(12)->md(6),
-                        shopwwiAmis('input-image')->name('siteInfo.siteIcon')->label(trans('siteInfo.siteIcon',[],$this->trans))->xs(12)->md(6),
+                        shopwwiAmis('combo')->name('siteInfo')->label('')->items([
+                            shopwwiAmis('hidden')->name('siteLogo'),
+                            shopwwiAmis('hidden')->name('siteIcon'),
+                            shopwwiAmis('input-image')->name('siteLogoUrl')->label(trans('siteInfo.siteLogo',[],$this->trans))->xs(12)->md(6)->autoFill(['siteLogo'=>'${file_name}'])->initAutoFill(false)->receiver(shopwwiAdminUrl('common/upload')),
+                            shopwwiAmis('input-image')->name('siteIconUrl')->label(trans('siteInfo.siteIcon',[],$this->trans))->xs(12)->md(6)->autoFill(['siteIcon'=>'${file_name}'])->initAutoFill(false)->receiver(shopwwiAdminUrl('common/upload')),
+                        ]),
                         shopwwiAmis('input-text')->name('siteInfo.siteEmail')->label(trans('siteInfo.siteEmail',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteEmail',[],$this->trans)],'messages'))->xs(12),
                         shopwwiAmis('input-text')->name('siteInfo.sitePhone')->label(trans('siteInfo.sitePhone',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.sitePhone',[],$this->trans)],'messages'))->xs(12),
                         shopwwiAmis('input-text')->name('siteInfo.siteIcp')->label(trans('siteInfo.siteIcp',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteIcp',[],$this->trans)],'messages'))->xs(12),
@@ -181,6 +188,7 @@ class SysConfigController extends AdminController
                         shopwwiAmis('textarea')->name('siteInfo.siteFlowCode')->label(trans('siteInfo.siteFlowCode',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteFlowCode',[],$this->trans)],'messages'))->xs(12),
                         shopwwiAmis('radios')->name('siteInfo.siteStatus')->label(trans('siteInfo.siteStatus',[],$this->trans))->selectFirst(true)->options($openOrClose)->xs(12),
                         shopwwiAmis('textarea')->name('siteInfo.siteCloseRemark')->label(trans('siteInfo.siteCloseRemark',[],$this->trans))->placeholder(trans('form.input',['attribute'=>trans('siteInfo.siteCloseRemark',[],$this->trans)],'messages'))->xs(12)->visibleOn('this.siteInfo?.siteStatus != 1'),
+
                     ])
                 ])->api('post:' . shopwwiAdminUrl('system/config/site'))
                     ->actions([
@@ -253,15 +261,21 @@ class SysConfigController extends AdminController
                     $info = SysConfigService::getFirstOrCreate([
                         'key' => 'siteDefaultImage'
                     ],['name'=>'站点默认图片','value'=>[
-                        'noPic' => 'uploads/default-image.png',
-                        'userAvatar' => 'uploads/default-avatar.png',
+                        'noPic' => 'uploads/default_image.png',
+                        'userAvatar' => 'uploads/default_avatar.png',
                     ]]);
+                    $info['siteDefaultImage']['noPicUrl'] = Storage::url($info['siteDefaultImage']['noPic'] ?? '');
+                    $info['siteDefaultImage']['userAvatarUrl'] = Storage::url($info['siteDefaultImage']['userAvatar'] ?? '');
                     return shopwwiSuccess($info);
                 }
                 $form = $this->baseForm()->body([
                     shopwwiAmis('grid')->gap('lg')->columns([
-                        shopwwiAmis('input-image')->name('siteDefaultImage.noPic')->label(trans('siteDefaultImage.goodsImage',[],$this->trans))->xs(12),
-                        shopwwiAmis('input-image')->name('siteDefaultImage.userAvatar')->label(trans('siteDefaultImage.userImage',[],$this->trans))->xs(12),
+                        shopwwiAmis('combo')->name('siteDefaultImage')->label('')->items([
+                            shopwwiAmis('hidden')->name('noPic'),
+                            shopwwiAmis('hidden')->name('userAvatar'),
+                            shopwwiAmis('input-image')->name('noPicUrl')->label(trans('siteDefaultImage.goodsImage',[],$this->trans))->xs(12)->md(6)->autoFill(['noPic'=>'${file_name}'])->initAutoFill(false)->receiver(shopwwiAdminUrl('common/upload')),
+                            shopwwiAmis('input-image')->name('userAvatarUrl')->label(trans('siteDefaultImage.userImage',[],$this->trans))->xs(12)->md(6)->autoFill(['userAvatar'=>'${file_name}'])->initAutoFill(false)->receiver(shopwwiAdminUrl('common/upload')),
+                        ])
                     ])
                 ])->api('post:' . shopwwiAdminUrl('system/config/pic'))
                     ->actions([

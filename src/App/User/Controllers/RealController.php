@@ -26,6 +26,7 @@ use support\Request;
 class RealController extends Controllers
 {
     protected $queryPath = 'real'; // 完整路由地址
+    protected $activeKey = 'authReal';
 
     /**
      * 获取实名认证信息

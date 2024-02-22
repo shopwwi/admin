@@ -87,6 +87,21 @@ class AmisService
         ];
     }
 
+    public static function getGradeList(){
+        return [
+            'mode' => 'table',
+            'name' => 'userAmisGradeList',
+            'autoGenerateFilter' => ['columnsNum'=>3,'showBtnToolbar'=>false],
+            'columns' => [
+                shopwwiAmis('text')->name('id')->label(trans('field.id',[],'messages'))->sortable(true)->searchable(shopwwiAmis('input-text')->name('id_like')->label(trans('field.id',[],'messages'))->placeholder('输入编号查询')),
+                shopwwiAmis('text')->name('name')->label(trans('field.name',[],'userGrade'))->searchable(shopwwiAmis('input-text')->name('name_like')->label(trans('field.name',[],'userGrade'))->placeholder('输入等级名称查询')),
+                shopwwiAmis('text')->name('ext_name')->label(trans('field.ext_name',[],'userGrade'))->sortable(true),
+                shopwwiAmis('text')->name('level')->label(trans('field.level',[],'userGrade'))->sortable(true),
+                shopwwiAmis('tpl')->name('group_id')->tpl('${group_name}(ID:${group_id})')->label(trans('field.group_id',[],'userGrade'))->sortable(true),
+            ]
+        ];
+    }
+
     public static function toMappingSelect($data,$type = '',$show = 'label'){
         $new = [];
         foreach ($data as $val){

@@ -209,7 +209,7 @@ class ServerParameters
         $result->author = 'TycoonSong';
         $result->qq = '8988354';
         $result->title = 'Shopwwi智能管理系统';
-        $result->admin_version = '1.1.28';
+        $result->admin_version = '1.0.6';
         $result->amis_version = '6.0';
         $result->tdesign_version = '1.8.0';
         $result->vue_version = '3.1.5';

@@ -31,7 +31,7 @@ class BalanceCashController extends Controllers
 {
     public $routePath = 'cash'; // 当前路由模块不填写则直接控制器名
     protected $model = \Shopwwi\Admin\App\User\Models\UserBalanceCash::class;
-
+    protected $activeKey = 'balanceCash';
     /**
      * 查询消费日志
      * @param Request $request
@@ -40,21 +40,24 @@ class BalanceCashController extends Controllers
      */
     public function index(Request $request)
     {
-
-        $user = $this->user();
-        if($this->format() == 'json'){
-            $list = $this->getList(new $this->model,function ($q) use ($user) {
-                return $q->where('user_id',$user->id);
-            },['id'=>'desc'],['user_id','keyword']);
-            return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
+        try {
+            $user = $this->user();
+            if($this->format() == 'json'){
+                $list = $this->getList(new $this->model,function ($q) use ($user) {
+                    return $q->where('user_id',$user->id);
+                },['id'=>'desc'],['user_id','keyword']);
+                return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
+            }
+            $page =$this->basePage()->body([
+                shopwwiAmis('alert')->title('我的提现')->className('must m-0')
+                    ->body("可提现金额：<b class='text-success'>$user->available_balance </b>元，每 <b class='text-success'>".shopwwiConfig('cash.rule.time',1)."</b> 天,可提现<b class='text-success'>".shopwwiConfig('cash.rule.num',10)."</b>次；最低提现金额：<b class='text-success'>".shopwwiConfig('cash.min',0.01)."</b>，最高提现金额：<b class='text-success'>".shopwwiConfig('cash.max',10000)."</b>，提现手续费<b class='text-success'>".shopwwiConfig('cash.rate',0)."/％</b>
+    "),
+                BalanceCashService::getIndexAmis($user->id)]);
+            if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
+            return $this->getUserView(['seoTitle'=>'我的提现','menuActive'=>'balanceCash','json'=>$page]);
+        }catch (\Exception $e){
+            return $this->backError($e);
         }
-        $page =$this->basePage()->body([
-            shopwwiAmis('alert')->title('我的提现')->className('must m-0')
-                ->body("可提现金额：<b class='text-success'>$user->available_balance </b>元，每 <b class='text-success'>".shopwwiConfig('cash.rule.time',1)."</b> 天,可提现<b class='text-success'>".shopwwiConfig('cash.rule.num',10)."</b>次；最低提现金额：<b class='text-success'>".shopwwiConfig('cash.min',0.01)."</b>，最高提现金额：<b class='text-success'>".shopwwiConfig('cash.max',10000)."</b>，提现手续费<b class='text-success'>".shopwwiConfig('cash.rate',0)."/％</b>
-"),
-            BalanceCashService::getIndexAmis($user->id)]);
-        if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
-        return $this->getUserView(['seoTitle'=>'我的提现','menuActive'=>'balanceCash','json'=>$page]);
     }
 
     /**

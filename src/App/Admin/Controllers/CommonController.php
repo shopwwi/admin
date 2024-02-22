@@ -97,7 +97,7 @@ class CommonController extends BaseController
      */
     public function upload(Request $request)
     {
-        try {
+//        try {
             $file = $request->file('file');
             $params = shopwwiParams(['type'=>0,'albumId'=>0]);
             $path = 'uploads/common/'.date('Ymd');
@@ -123,9 +123,9 @@ class CommonController extends BaseController
                 'original_name' => $result->origin_name,
             ]);
             return shopwwiSuccess($result);
-        }catch (\Exception $e){
-            return shopwwiError($e->getMessage());
-        }
+//        }catch (\Exception $e){
+//            return $e;
+//        }
     }
 
 }

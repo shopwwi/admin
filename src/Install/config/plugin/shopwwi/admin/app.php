@@ -7,6 +7,10 @@ return [
         'methods' => 'GET,POST,PUT,DELETE,OPTIONS',
         'headers' => 'Content-Type,Authorization,X-Requested-With,Accept,Origin'
     ],
+    'prefix' => [
+        'admin' => '/admin',
+        'user' => '/user'
+    ],
     'sensitive_int' => ['(', ')', ',', '，', ';', '；', '。','*','）','（','-','_','=','+','&','^','…','%','$','￥','#','@','!','！'], // 敏感词干扰因子
     'http' => [
         /**

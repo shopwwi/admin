@@ -41,21 +41,21 @@ class Install
     public static function install()
     {
         // 写入默认auth信息
-        Appoint::replaceStringInFiles(base_path() . '/config/plugin/shopwwi/auth/app.php',"'guard'",<<<EOF
-         'member' => [
-             'key' => 'id',
-             'field' => ['id','username','email','mobile','nickname','avatar','avatarUrl'], //设置允许写入扩展中的字段
-             'num' => -1, //-1为不限制终端数量 0为只支持一个终端在线 大于0为同一账号同终端支持数量 建议设置为1 则同一账号同终端在线1个
-             'model'=> \Shopwwi\Admin\App\User\Models\Users::class
-         ],
-         'admin' => [
-             'key' => 'id',
-             'field' => ['id','username','role_id','sector_ids','nickname','avatar','status','login_ip','login_time','login_num'],
-             'num' => -1, //-1为不限制终端数量 0为只支持一个终端在线 大于0为同一账号同终端支持数量 建议设置为1 则同一账号同终端在线1个
-             'model'=> \Shopwwi\Admin\App\Admin\Models\SysUser::class
-         ],
-EOF
-        );
+//        Appoint::replaceStringInFiles(base_path() . '/config/plugin/shopwwi/auth/app.php',"'guard'",<<<EOF
+//         'member' => [
+//             'key' => 'id',
+//             'field' => ['id','username','email','mobile','nickname','avatar','avatarUrl'], //设置允许写入扩展中的字段
+//             'num' => -1, //-1为不限制终端数量 0为只支持一个终端在线 大于0为同一账号同终端支持数量 建议设置为1 则同一账号同终端在线1个
+//             'model'=> \Shopwwi\Admin\App\User\Models\Users::class
+//         ],
+//         'admin' => [
+//             'key' => 'id',
+//             'field' => ['id','username','role_id','sector_ids','nickname','avatar','status','login_ip','login_time','login_num'],
+//             'num' => -1, //-1为不限制终端数量 0为只支持一个终端在线 大于0为同一账号同终端支持数量 建议设置为1 则同一账号同终端在线1个
+//             'model'=> \Shopwwi\Admin\App\Admin\Models\SysUser::class
+//         ],
+//EOF
+//        );
         static::installByRelation();
     }
 

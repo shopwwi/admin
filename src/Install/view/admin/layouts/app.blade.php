@@ -38,7 +38,7 @@
         i{line-height: 1;font-size: 1rem;}
     </style>
     <script>
-        var shopwwiAdminUrl = "{{ shopwwiAdminUrl('') }}",shopwwiAdminPrefix = "{{ config('plugin.shopwwi.admin.app.prefix.admin','admin') }}",Editor;
+        var shopwwiAdminUrl = "{{ shopwwiAdminUrl('') }}",shopwwiAdminPrefix = "{{ config('plugin.shopwwi.admin.app.prefix.admin','/admin') }}",Editor;
     </script>
 </head>
 <body id="fullscreen">

@@ -17,11 +17,12 @@
 
 namespace Shopwwi\Admin\App\User\Traits;
 
+use Shopwwi\Admin\App\User\Service\GradeService;
+
 trait UserGradeTraits
 {
     /**
      * @return void
-     * @throws Exception
      */
     public static function bootUserGradeTraits()
     {
@@ -29,6 +30,7 @@ trait UserGradeTraits
             if($userGrade->is_default){
                 throw new \Exception('默认等级不允许删除');
             }
+            GradeService::clear();
         });
 
         static::creating(function ($userGrade){
@@ -39,12 +41,14 @@ trait UserGradeTraits
             if($has != null){
                 throw  new \Exception('数字等级已存在，换个试试');
             }
+            GradeService::clear();
         });
         static::updating(function ($model){
             $has = static::where('level',$model->level)->where('group_id',$model->group_id)->where('id','<>',$model->id)->first();
             if($has != null){
                 throw  new \Exception('数字等级已存在，换个试试');
             }
+            GradeService::clear();
         });
     }
 }

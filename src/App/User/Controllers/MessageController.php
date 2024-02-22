@@ -15,6 +15,7 @@ use support\Request;
 class MessageController extends Controllers
 {
     protected $model = UserMsg::class;
+    protected $activeKey = 'account';
 
     /**
      * 获取列表
@@ -142,6 +143,20 @@ class MessageController extends Controllers
             return shopwwiSuccess([],trans('del',[],'messages').trans('success',[],'messages'));
         } catch (\Exception $e) {
             Db::connection()->rollBack();
+            return shopwwiError($e->getMessage());
+        }
+    }
+
+    /**
+     * 未读消息统计
+     * @return \support\Response
+     */
+    public function count(){
+        try {
+            $user = $this->user(true);
+            $count = UserMsg::where('user_id',$user->id)->where('is_read',0)->count();
+            return shopwwiSuccess(['count'=>$count]);
+        }catch (\Exception $e){
             return shopwwiError($e->getMessage());
         }
     }

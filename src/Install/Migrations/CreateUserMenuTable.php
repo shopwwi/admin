@@ -15,9 +15,10 @@ class CreateUserMenuTable
     public static function up()
     {
         Db::connection()->getSchemaBuilder()->create('user_menu', function (Blueprint $table) {
-            $table->string('id')->comment('菜单ID');
+            $table->increments('id')->comment('菜单ID');
             $table->string('name', 50)->comment('菜单名称');
             $table->string('pid')->nullable()->comment('父菜单ID');
+            $table->string('key')->comment('唯一标识');
             $table->integer('sort')->nullable()->default(999)->comment('显示顺序');
             $table->string('path', 200)->nullable()->default('')->comment('路由地址');
             $table->string('component')->nullable()->comment('组件路径');

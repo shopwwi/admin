@@ -40,14 +40,14 @@ class UserMenu extends Model
      *
      * @var bool
      */
-     public $incrementing = false;
+//     public $incrementing = false;
 
      /**
      * 自动递增主键的「类型」
      *
      * @var string
      */
-      protected $keyType = 'string';
+//      protected $keyType = 'string';
 
      /**
       * 是否主动维护时间戳

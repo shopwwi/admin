@@ -19,6 +19,7 @@ namespace Shopwwi\Admin\App\Admin\Controllers;
 
 use Shopwwi\Admin\Amis\DropdownButton;
 use Shopwwi\Admin\Amis\Operation;
+use Shopwwi\Admin\App\Admin\Service\AmisService;
 use Shopwwi\Admin\App\Admin\Service\DateRangeService;
 use Shopwwi\Admin\App\Admin\Service\DictTypeService;
 use Shopwwi\Admin\App\Admin\Service\User\UserService;
@@ -34,6 +35,7 @@ class UsersController extends AdminController
     protected $trans = 'users'; // 语言文件名称
     protected $queryPath = 'users'; // 完整路由地址
     protected $activeKey = 'userMangeList';
+    public $routeDelay = true;
 
     /**
      * 路由注册
@@ -59,9 +61,9 @@ class UsersController extends AdminController
             shopwwiAmisFields(trans('field.nickname',[],'users'),'nickname')->rules('required'),
             shopwwiAmisFields(trans('field.avatar',[],'users'),'avatar')->column('hidden',['md'=>12])->tableColumn(['type'=>'image','name'=>'avatarUrl','width'=>30,'height'=>30,'imageMode'=>'original']),
             shopwwiAmisFields(trans('field.avatar',[],'users'),'avatarUrl')->column('input-image',['autoFill'=>['avatar'=>'${file_name}'],'crop'=>['aspectRatio'=>3],'receiver'=>shopwwiAdminUrl('user/users/upload')])->showColumn('control',['body'=>['type'=>'image','name'=>'avatarUrl','width'=>90,'height'=>90]])->showOnIndex(0)->showOnCreation(3)->showOnUpdate(3),
-            shopwwiAmisFields(trans('field.password',[],'users'),'password')->rules(['bail','chs_dash_pwd','min:6'])->creationRules(['required'])->updateRules(['nullable'])->showOnIndex(0)->showOnDetail(0),
-            shopwwiAmisFields(trans('field.pay_pwd',[],'users'),'pay_pwd')->rules(['bail','chs_dash_pwd','min:6'])->creationRules(['required'])->updateRules(['nullable'])->showOnIndex(0)->showOnDetail(0),
-            shopwwiAmisFields(trans('field.grade_id',[],'users'),'grade_id'),
+            shopwwiAmisFields(trans('field.password',[],'users'),'password')->rules(['bail','chs_dash_pwd','min:6'])->column('input-password')->creationRules(['required'])->updateRules(['nullable'])->showOnIndex(0)->showOnDetail(0),
+            shopwwiAmisFields(trans('field.pay_pwd',[],'users'),'pay_pwd')->rules(['bail','chs_dash_pwd','min:6'])->column('input-password')->creationRules(['required'])->updateRules(['nullable'])->showOnIndex(0)->showOnDetail(0),
+            shopwwiAmisFields(trans('field.grade_id',[],'users'),'grade_id')->rules('required')->column('picker',['joinValues'=>true,'source'=>shopwwiAdminUrl('user/grades/list?_format=json'),'size'=>'lg','valueField'=>'id','labelField'=>'name','pickerSchema'=>AmisService::getGradeList()]),
             shopwwiAmisFields(trans('field.phone',[],'users'),'phone')->rules('required')->creationRules(['chs_unique:users'])->updateRules(["chs_as_unique:users,\${id}"])->tableColumn(["classNameExpr"=>"<%= data.phone_bind == 1 ? 'text-success' : '' %>",'width'=>145]),
             shopwwiAmisFields(trans('field.phone_bind',[],'users'),'phone_bind')->showOnIndex(2)->showOnCreation(0)->showOnUpdate(0),
             shopwwiAmisFields(trans('field.email',[],'users'),'email')->rules('required')->creationRules(['chs_unique:users'])->updateRules(["chs_as_unique:users,\${id}"])->tableColumn(["classNameExpr"=>"<%= data.email_bind == 1 ? 'text-success' : '' %>",'width'=>145]),
@@ -69,7 +71,7 @@ class UsersController extends AdminController
             shopwwiAmisFields(trans('field.sex',[],'users'),'sex')->filterColumn('select',['options'=>$sexDict])
                 ->tableColumn(['sortable'=>true,'align'=>'center','type'=>'mapping','map'=>$this->toMappingSelect($sexDict,'${sex}','default')])
                 ->column('radios',['selectFirst'=>true,'options'=>$sexDict])->rules(['required','in:0,1,2']),
-            shopwwiAmisFields(trans('field.invite_id',[],'users'),'invite_id')->column('input-number',['min'=>0]),
+            shopwwiAmisFields(trans('field.invite_id',[],'users'),'invite_id')->column('picker',['joinValues'=>true,'source'=>shopwwiAdminUrl('users/list?_format=json'),'size'=>'lg','valueField'=>'id','labelField'=>'nickname','pickerSchema'=>AmisService::getUserList()]),
             shopwwiAmisFields(trans('field.status',[],'users'),'status')->rules(['bail','required','in:1,0'])
                 ->tableColumn(['sortable'=>true,'type'=>'mapping','map'=>$this->toMappingSelect($allowOrUnAllow,'${status}')])
                 ->filterColumn('select',['options'=>$allowOrUnAllow])

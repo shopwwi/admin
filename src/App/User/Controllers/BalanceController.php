@@ -24,21 +24,26 @@ use support\Request;
 
 class BalanceController extends Controllers
 {
+    protected $activeKey = 'balanceIndex';
     public function index(Request $request)
     {
-        $user = $this->user();
-        if($this->format() == 'json'){
-            $list = $this->getList(new UserBalanceLog(),function ($q) use ($user) {
-                return $q->where('user_id',$user->id);
-            },['id'=>'desc'],['user_id','keyword']);
-            return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
-        }
+        try {
+            $user = $this->user();
+            if($this->format() == 'json'){
+                $list = $this->getList(new UserBalanceLog(),function ($q) use ($user) {
+                    return $q->where('user_id',$user->id);
+                },['id'=>'desc'],['user_id','keyword']);
+                return shopwwiSuccess(['items'=>$list->items(),'total'=>$list->total(),'page'=>$list->currentPage(),'hasMore' =>$list->hasMorePages()]);
+            }
 
-        $page =$this->basePage()->body([
-            shopwwiAmis('alert')->title('我的余额')->className('must m-0')->body("可用余额：<b class='text-success'>$user->available_balance 元</b>。 <br/> 冻结余额：<b class='text-danger'>$user->frozen_balance 元</b>。"),
-            BalanceLogService::getIndexAmis()]);
-        if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
-        return $this->getUserView(['seoTitle'=>'我的余额','menuActive'=>'balanceIndex','json'=>$page]);
+            $page =$this->basePage()->body([
+                shopwwiAmis('alert')->title('我的余额')->className('must m-0')->body("可用余额：<b class='text-success'>$user->available_balance 元</b>。 <br/> 冻结余额：<b class='text-danger'>$user->frozen_balance 元</b>。"),
+                BalanceLogService::getIndexAmis()]);
+            if($this->format() == 'data' || $this->format() == 'web') return shopwwiSuccess($page);
+            return $this->getUserView(['seoTitle'=>'我的余额','menuActive'=>'balanceIndex','json'=>$page]);
+        }catch (\Exception $e){
+            return $this->backError($e);
+        }
     }
 
 

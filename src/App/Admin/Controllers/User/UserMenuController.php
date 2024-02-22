@@ -37,8 +37,9 @@ class UserMenuController extends AdminController
         $yesOrNo = DictTypeService::getAmisDictType('yesOrNo');
         $sysMenuType = DictTypeService::getAmisDictType('sysMenuType');
         return [
-            shopwwiAmisFields(trans('field.id',[],'messages'),'id')->tableColumn(['width'=>60,'sortable'=>true])->rules('required')->showFilter(),
+            shopwwiAmisFields(trans('field.id',[],'messages'),'id')->tableColumn(['width'=>60,'sortable'=>true])->showFilter(),
             shopwwiAmisFields(trans('field.name',[],'userMenu'),'name')->rules('required'),
+            shopwwiAmisFields(trans('field.key',[],'userMenu'),'key')->rules('required'),
             shopwwiAmisFields(trans('field.pid',[],'userMenu'),'pid')->rules(['bail','nullable','numeric','min:0'])->column('tree-select',['source'=>'$items','labelField'=>'name','valueField'=>'id']),
             shopwwiAmisFields(trans('field.sort',[],'messages'),'sort')->tableColumn(['width'=>60,'sortable'=>true])->rules(['bail','required','numeric','min:0','max:999'])->column('input-number',['min'=>0,'max'=>999]),
             shopwwiAmisFields(trans('field.path',[],'userMenu'),'path'),

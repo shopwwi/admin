@@ -19,7 +19,7 @@ class UserMenuSeeder
             if(!isset($item['sort'])){
                 $item['sort'] = $sort;
             }
-            $first = UserMenu::create($item);
+            $first = UserMenu::firstOrCreate(['key'=>$item['key']],$item);
             if(isset($level) && count($level) > 0) {
                 self::setMenu($level, $first->id);
             }
@@ -43,7 +43,7 @@ class UserMenuSeeder
             if(!isset($item['sort'])){
                 $item['sort'] = $sort;
             }
-            $first = UserMenu::create($item);
+            $first = UserMenu::firstOrCreate(['key'=>$item['key']],$item);
             if(!empty($level)) {
                 self::setMenu($level, $first->id);
             }
@@ -53,21 +53,19 @@ class UserMenuSeeder
 
     protected static function getData(){
         return [
-            ['name' => '账户设置','id'=>'account','menu_type' => 'M','children' => [
-                ['name'=>'会员资料','id'=>'auth','menu_type' => 'M','children' => [
-                    ['name'=>'账户安全','id'=>'authSecurity','menu_type' => 'C','component' => '/security','path'=>'/security'],
-                    ['name'=>'收货地址','id'=>'authAddress','menu_type' => 'C','component' => '/address','path'=>'/address'],
-                    ['name'=>'实名认证','id'=>'authReal','menu_type' => 'C','component' => '/real','path'=>'/real'],
+            ['name' => '首页','key'=>'account','menu_type' => 'M','children' => [
+                ['name'=>'会员资料','key'=>'auth','menu_type' => 'M','children' => [
+                    ['name'=>'账户安全','key'=>'authSecurity','menu_type' => 'C','component' => '/security','path'=>'/security'],
+                    ['name'=>'收货地址','key'=>'authAddress','menu_type' => 'C','component' => '/address','path'=>'/address'],
+                    ['name'=>'实名认证','key'=>'authReal','menu_type' => 'C','component' => '/real','path'=>'/real'],
                 ]],
-                ['name'=>'财产中心','id'=>'my','menu_type' => 'M','children' => [
-                    ['name'=>'我的资产','id'=>'balance','menu_type' => 'M','children' => [
-                        ['name'=>'我的余额','id'=>'balanceIndex','menu_type' => 'C','component' => '/balance','path'=>'/balance'],
-                        ['name'=>'我的充值','id'=>'balanceRecharge','menu_type' => 'C','component' => '/recharge','path'=>'/recharge'],
-                        ['name'=>'我的提现','id'=>'balanceCash','menu_type' => 'C','component' => '/cash','path'=>'/cash'],
-                        ['name'=>'我的银行卡','id'=>'balanceBank','menu_type' => 'C','component' => '/bank','path'=>'/bank'],
-                    ]],
-                    ['name'=>'我的积分','id'=>'myPoint','menu_type' => 'C','component' => '/points','path'=>'/points'],
-                    ['name'=>'我的等级','id'=>'myGrade','menu_type' => 'C','component' => '/grade','path'=>'/grade'],
+                ['name'=>'财产中心','key'=>'my','menu_type' => 'M','children' => [
+                    ['name'=>'我的余额','key'=>'balanceIndex','menu_type' => 'C','component' => '/balance','path'=>'/balance'],
+                    ['name'=>'我的充值','key'=>'balanceRecharge','menu_type' => 'C','component' => '/recharge','path'=>'/recharge'],
+                    ['name'=>'我的提现','key'=>'balanceCash','menu_type' => 'C','component' => '/cash','path'=>'/cash'],
+                    ['name'=>'我的银行卡','key'=>'balanceBank','menu_type' => 'C','component' => '/bank','path'=>'/bank'],
+                    ['name'=>'我的积分','key'=>'myPoint','menu_type' => 'C','component' => '/points','path'=>'/points'],
+                    ['name'=>'我的等级','key'=>'myGrade','menu_type' => 'C','component' => '/grade','path'=>'/grade'],
                 ]]
             ]]
         ];
