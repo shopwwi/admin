@@ -335,7 +335,7 @@ if (!function_exists('shopwwiAdminUrl')) {
             $url = '//'.request()->host();
         }
         if(!empty($prefix)){
-            $url = $url.'/'.$prefix;
+            $url = $url.$prefix;
         }
         if(empty($path)){
             return $url;
