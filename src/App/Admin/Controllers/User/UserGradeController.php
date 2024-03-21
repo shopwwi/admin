@@ -64,9 +64,9 @@ class UserGradeController extends AdminController
                     ])->name('items')->multiple(true)->addable(false)->removable(false)
                 ],'multiLine' => true,'md'=>12,'description'=>'满足任意条件即开启的条件中满足任意一项即可升级，满足全部条件即开启的条件需全部满足方可升级'])->showOnIndex(0),
             shopwwiAmisFields(trans('field.icon',[],'userGrade'),'icon')->column('hidden',['md'=>12])->tableColumn(['type'=>'image','name'=>'iconUrl','width'=>30,'height'=>30,'imageMode'=>'original']),
-            shopwwiAmisFields(trans('field.icon',[],'userGrade'),'iconUrl')->column('input-image',['autoFill'=>['icon'=>'${file_name}'],'crop'=>['aspectRatio'=>1],'receiver'=>shopwwiAdminUrl('common/upload')])->showColumn('control',['body'=>['type'=>'image','name'=>'iconUrl','width'=>60,'height'=>60]])->showOnIndex(0)->showOnCreation(3)->showOnUpdate(3),
+            shopwwiAmisFields(trans('field.icon',[],'userGrade'),'iconUrl')->column('input-image',['autoFill'=>['icon'=>'${file_name}'],'initAutoFill'=>false,'crop'=>['aspectRatio'=>1],'receiver'=>shopwwiAdminUrl('common/upload')])->showColumn('control',['body'=>['type'=>'image','name'=>'iconUrl','width'=>60,'height'=>60]])->showOnIndex(0)->showOnCreation(3)->showOnUpdate(3),
             shopwwiAmisFields(trans('field.image_name',[],'userGrade'),'image_name')->column('hidden',['md'=>12])->tableColumn(['type'=>'image','name'=>'imageUrl','width'=>30,'height'=>30,'imageMode'=>'original']),
-            shopwwiAmisFields(trans('field.image_name',[],'userGrade'),'imageUrl')->column('input-image',['autoFill'=>['image_name'=>'${file_name}'],'crop'=>['aspectRatio'=>3],'receiver'=>shopwwiAdminUrl('common/upload')])->showColumn('control',['body'=>['type'=>'image','name'=>'imageUrl','width'=>90,'height'=>30]])->showOnIndex(0)->showOnCreation(3)->showOnUpdate(3),
+            shopwwiAmisFields(trans('field.image_name',[],'userGrade'),'imageUrl')->column('input-image',['autoFill'=>['image_name'=>'${file_name}'],'initAutoFill'=>false,'crop'=>['aspectRatio'=>3],'receiver'=>shopwwiAdminUrl('common/upload')])->showColumn('control',['body'=>['type'=>'image','name'=>'imageUrl','width'=>90,'height'=>30]])->showOnIndex(0)->showOnCreation(3)->showOnUpdate(3),
             shopwwiAmisFields(trans('field.remark',[],'userGrade'),'remark')->column('textarea',['md'=>12]),
             shopwwiAmisFields(trans('field.status',[],'userGrade'),'status')->rules(['bail','required','numeric','in:0,1'])->tableColumn(['sortable'=>true,'type'=>'mapping','map'=>$this->toMappingSelect($openOrClose,'${status}')])->filterColumn('select',['options'=>$openOrClose])->column('radios',['options'=>$openOrClose,'selectFirst'=>true]),
             shopwwiAmisFields(trans('field.is_default',[],'userGrade'),'is_default')->rules(['bail','required','numeric','in:0,1'])->tableColumn(['sortable'=>true,'type'=>'mapping','map'=>$this->toMappingSelect($yesOrNo,'${status}')])->filterColumn('select',['options'=>$yesOrNo])->column('radios',['options'=>$yesOrNo,'selectFirst'=>true]),
@@ -87,14 +87,14 @@ class UserGradeController extends AdminController
             'status' => 1,
             'rule' => [
                 'modal' => 0, // 0 为任意条件 1为全部条件
-                'items' => [
+                'items' => config('plugin.shopwwi.admin.app.GRADE_RULE',[
                     ['type'=>'consume','desc'=> '消费满xx元', 'used'=>'0','num' => 0], //消费满XX元
                     ['type'=>'orders','desc'=> '订单量','used'=>'0','num' => 0], // 订单量
                     ['type'=>'recharge','desc'=> '累计充值','used'=>'0','num' => 0], // 累计充值
                     ['type'=>'invite','desc'=> '邀请人数','used'=>'0','num' => 0], // 邀请人数
                     ['type'=>'growth','desc'=> '成长值','used'=>'0','num' => 0], // 成长值
                     ['type'=>'points','desc'=> '积分累计','used'=>'0','num' => 0], // 积分数量
-                ]
+                ])
             ]
         ];
     }
@@ -102,6 +102,38 @@ class UserGradeController extends AdminController
     public function list(Request $request)
     {
         return $this->jsonList(false,[]);
+    }
+
+    /**
+     * 编辑返回数据插入
+     * @param $info
+     * @param $id
+     * @return mixed
+     */
+    protected function insertGetEdit($info,$id){
+        $rule = [
+            'modal' => $info->rule['modal'] ?? 0, // 0 为任意条件 1为全部条件
+            'items' => config('plugin.shopwwi.admin.app.GRADE_RULE',[
+                ['type'=>'consume','desc'=> '消费满xx元', 'used'=>'0','num' => 0], //消费满XX元
+                ['type'=>'orders','desc'=> '订单量','used'=>'0','num' => 0], // 订单量
+                ['type'=>'recharge','desc'=> '累计充值','used'=>'0','num' => 0], // 累计充值
+                ['type'=>'invite','desc'=> '邀请人数','used'=>'0','num' => 0], // 邀请人数
+                ['type'=>'growth','desc'=> '成长值','used'=>'0','num' => 0], // 成长值
+                ['type'=>'points','desc'=> '积分累计','used'=>'0','num' => 0], // 积分数量
+            ])
+        ];
+        if(isset($info->rule['items']) && count($info->rule['items']) > 0){
+            foreach ($info->rule['items'] as $val){
+                foreach ($rule['items'] as $key=>$val2){
+                    if($val['type'] == $val2['type']){
+                        $rule['items'][$key]['used'] = $val['used'] ?? '0';
+                        $rule['items'][$key]['num'] = $val['num'] ?? 0;
+                    }
+                }
+            }
+        }
+        $info->rule = $rule;
+        return $info;
     }
 
     /**

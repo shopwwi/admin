@@ -229,7 +229,7 @@ class SysConfigController extends AdminController
                     shopwwiAmis('grid')->gap('lg')->columns([
                         shopwwiAmis('combo')->name('userLoginImages')->label('登入图片')->multiple(true)->items([
                             shopwwiAmis('hidden')->name('imageName'),
-                            shopwwiAmis('input-image')->name('image')->autoFill(['imageName'=>'${file_name}'])->receiver(shopwwiAdminUrl('common/upload'))->label('登入图片'),
+                            shopwwiAmis('input-image')->name('image')->autoFill(['imageName'=>'${file_name}'])->initAutoFill(false)->receiver(shopwwiAdminUrl('common/upload'))->label('登入图片'),
                             shopwwiAmis('input-color')->name('bgColor')->label('背景颜色'),
                         ])
                     ])

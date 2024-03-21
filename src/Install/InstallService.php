@@ -95,6 +95,8 @@ class InstallService
         Db::connection()->getSchemaBuilder()->create('migrations', function (Blueprint $table) {
             $table->bigInteger('id', true)->comment('编号');
             $table->string('name', 200)->nullable()->default('')->comment('文件名称');
+            $table->string('migration')->nullable()->default('')->comment('文件名称');
+            $table->integer('batch')->nullable();
             $table->timestamp('created_at')->nullable()->comment('创建时间');
             $table->comment('数据表写入操作');
         });

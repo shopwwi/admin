@@ -210,7 +210,7 @@
                 if(step === 3) this.threeActive = item.key;
                if(step === 4) this.forActive = item.key;
                 if(this.$router && item.is_cache ==1){
-                    const prefix = (shopwwiAdminPrefix !== '' || shopwwiAdminPrefix !== '/')?shopwwiAdminPrefix:'';
+                    const prefix = '/' + shopwwiAdminPrefix;
                     return this.$router.push(prefix + item.path);
                 }
                 return window.location.href = shopwwiAdminUrl + item.path;

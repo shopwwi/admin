@@ -123,6 +123,7 @@ class DictTypeService
     public static function toMappingSelect($data,$type = '',$show = 'label'){
         $new = [];
         foreach ($data as $val){
+            $val->list_class = $val->list_class ?? null;
             switch ($show){
                 case 'label':
                     $new[$val->value] = '<span class="label label-'.$val->list_class.'">'.$val->label.'</span>';

@@ -11,6 +11,14 @@ return [
         'admin' => '/admin',
         'user' => '/user'
     ],
+    'GRADE_RULE' => [
+        ['type'=>'consume','desc'=>'消费满xx元','used'=>'0', 'num'=> 0],
+        ['type'=>'orders','desc'=>'订单量','used'=>'0', 'num'=> 0],
+        ['type'=>'recharge','desc'=>'累计充值','used'=>'0', 'num'=> 0],
+        ['type'=>'invite','desc'=>'邀请人数','used'=>'0', 'num'=> 0],
+        ['type'=>'growth','desc'=>'成长值','used'=>'0', 'num'=> 0],
+        ['type'=>'points','desc'=>'积分累计','used'=>'0', 'num'=> 0],
+    ],
     'sensitive_int' => ['(', ')', ',', '，', ';', '；', '。','*','）','（','-','_','=','+','&','^','…','%','$','￥','#','@','!','！'], // 敏感词干扰因子
     'http' => [
         /**

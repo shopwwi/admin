@@ -50,7 +50,7 @@ class SysUserController extends AdminController
         return [
             shopwwiAmisFields(trans('field.id',[],'sysUser'),'id')->showOnCreation(0)->showOnUpdate(0),
             shopwwiAmisFields(trans('field.avatar',[],'sysUser'),'avatar')->column('hidden',['md'=>12])->tableColumn(['type'=>'image','name'=>'avatarUrl','width'=>30,'height'=>30,'imageMode'=>'original']),
-            shopwwiAmisFields(trans('field.avatar',[],'sysUser'),'avatarUrl')->column('input-image',['autoFill'=>['avatar'=>'${file_name}'],'crop'=>['aspectRatio'=>3],'receiver'=>shopwwiAdminUrl('system/user/upload')])->showColumn('control',['body'=>['type'=>'image','name'=>'avatarUrl','width'=>90,'height'=>90]])->showOnIndex(0)->showOnCreation(3)->showOnUpdate(3),
+            shopwwiAmisFields(trans('field.avatar',[],'sysUser'),'avatarUrl')->column('input-image',['autoFill'=>['avatar'=>'${file_name}'],'initAutoFill'=>false,'crop'=>['aspectRatio'=>3],'receiver'=>shopwwiAdminUrl('system/user/upload')])->showColumn('control',['body'=>['type'=>'image','name'=>'avatarUrl','width'=>90,'height'=>90]])->showOnIndex(0)->showOnCreation(3)->showOnUpdate(3),
             shopwwiAmisFields(trans('field.username',[],'sysUser'),'username')->rules('required')->showFilter(),
             shopwwiAmisFields(trans('field.nickname',[],'sysUser'),'nickname')->showFilter(),
             shopwwiAmisFields(trans('field.password',[],'sysUser'),'password')->rules(['bail','chs_dash_pwd','min:6'])->creationRules(['required'])->updateRules(['nullable'])->showOnIndex(0)->showOnDetail(0),

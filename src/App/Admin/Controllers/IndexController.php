@@ -193,7 +193,7 @@ class IndexController extends BaseController
                         ['title'=>'个人信息','tab'=>$this->baseForm()->body([
                             shopwwiAmis('grid')->gap('lg')->columns([
                                 shopwwiAmis('hidden')->name('avatar')->value($admin->avatar),
-                                shopwwiAmis('input-image')->name('avatarUrl')->value($admin->avatarUrl)->label('头像')->autoFill(['avatar'=>'${file_name}'])->receiver(shopwwiAdminUrl('common/upload'))->crop(['aspectRatio'=>1])->xs(12),
+                                shopwwiAmis('input-image')->name('avatarUrl')->value($admin->avatarUrl)->label('头像')->autoFill(['avatar'=>'${file_name}'])->initAutoFill(false)->receiver(shopwwiAdminUrl('common/upload'))->crop(['aspectRatio'=>1])->xs(12),
                                 shopwwiAmis('input-text')->name('username')->value($admin->username)->disabled(true)->label('账号')->xs(12)->lg(6),
                                 shopwwiAmis('input-text')->name('nickname')->value($admin->nickname)->label('昵称')->xs(12)->lg(6),
                                 shopwwiAmis('input-text')->name('email')->value($admin->email)->label('邮箱')->xs(12)->lg(6),
